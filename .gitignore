@@ -1,9 +1,10 @@
 __pycache__/
 *.pyc
 .coverage
+.env
 hc.sqlite
 hc/local_settings.py
 static-collected
-
+hc_venv/
 .DS_Store
 static/.DS_Store
