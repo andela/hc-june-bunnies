@@ -1,5 +1,7 @@
 # healthchecks
 
+[![Coverage Status](https://coveralls.io/repos/github/andela/hc-june-bunnies/badge.svg?branch=develop)](https://coveralls.io/github/andela/hc-june-bunnies?branch=develop)
+
 ![Screenshot of Welcome page](/stuff/screenshots/welcome.png?raw=true "Welcome Page")
 
 ![Screenshot of My Checks page](/stuff/screenshots/my_checks.png?raw=true "My Checks Page")
