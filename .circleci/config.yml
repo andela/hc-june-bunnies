@@ -51,9 +51,9 @@ jobs:
             python manage.py test
             coveralls
 
-      - general:
-          artifacts:
-            - "coverage"
+general:
+  artifacts:
+    - "coverage"
 
 machine:
   environment:
