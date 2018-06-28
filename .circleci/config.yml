@@ -51,9 +51,9 @@ jobs:
             python manage.py test
             coveralls
 
-      - store_artifacts:
-          path: coverage
-          destination: coverage
+      - general:
+          artifacts:
+            - "coverage"
 
 machine:
   environment:
