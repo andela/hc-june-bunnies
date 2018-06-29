@@ -1,6 +1,5 @@
 # healthchecks
-
-[![Coverage Status](https://coveralls.io/repos/github/andela/hc-june-bunnies/badge.svg?branch=jk%2add-continuous-integration)](https://coveralls.io/github/andela/hc-june-bunnies?branch=jk%2add-continuous-integration) [![CircleCI](https://circleci.com/gh/andela/hc-june-bunnies/tree/jk%2Fadd-continuous-integration.svg?style=svg)](https://circleci.com/gh/andela/hc-june-bunnies/tree/jk%2Fadd-continuous-integration)
+ [![CircleCI](https://circleci.com/gh/andela/hc-june-bunnies/tree/jk%2Fadd-continuous-integration.svg?style=svg)](https://circleci.com/gh/andela/hc-june-bunnies/tree/jk%2Fadd-continuous-integration) [![Coverage Status](https://coveralls.io/repos/github/andela/hc-june-bunnies/badge.svg?branch=jk%2Fadd-continuous-integration)](https://coveralls.io/github/andela/hc-june-bunnies?branch=jk%2Fadd-continuous-integration)
 
 ![Screenshot of Welcome page](/stuff/screenshots/welcome.png?raw=true "Welcome Page")
 
