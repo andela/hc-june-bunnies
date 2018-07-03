@@ -77,5 +77,26 @@ class CreateCheckTestCase(BaseTestCase):
         self.post({"api_key": "abc", "name": False},
                   expected_error="name is not a string")
 
-    ### Test for the assignment of channels
+    def test_it_can_assign_check_to_all_channels(self):
+        ### Test for the assignment of channels
+        ch = Channel(user=self.alice, kind="pushbullet", value="test checks")
+        ch1 = Channel(user=self.alice, kind="slack", value="test checks")
+        ch.save()
+        ch1.save()
+        # register a new check and add it to all channels
+        response = self.post({
+            "api_key": "abc",
+            "name": "dbbackup",
+            "tags": "cronjob,db",
+            "timeout": 60400,
+            "grace": 120,
+            "channels": "*"
+        })
+
+        self.assertEqual(response.status_code, 201)
+        # assert that each channel now has one check assigned to it
+        self.assertEqual(ch.checks.all().count(), 1)
+        self.assertEqual(ch1.checks.all().count(), 1)
+
+
     ### Test for the 'timeout is too small' and 'timeout is too large' errors
