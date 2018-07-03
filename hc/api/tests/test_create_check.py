@@ -100,5 +100,18 @@ class CreateCheckTestCase(BaseTestCase):
         self.assertEqual(ch.checks.all().count(), 1)
         self.assertEqual(ch1.checks.all().count(), 1)
 
+    def test_timeout_is_too_small(self):
+
+        response = self.post({
+            "api_key": "abc",
+            "name": "dbbackup",
+            "tags": "cronjob,db",
+            "timeout": 40,
+            "grace": 120
+        })
+        print(response.json())
+        self.assertEqual(400,response.status_code)
+        self.assertEqual('timeout is too small',response.json()['error'])
+
 
     ### Test for the 'timeout is too small' and 'timeout is too large' errors
