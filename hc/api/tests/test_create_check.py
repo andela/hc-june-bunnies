@@ -118,3 +118,16 @@ class CreateCheckTestCase(BaseTestCase):
 
 
     ### Test for the 'timeout is too small' and 'timeout is too large' errors
+    def test_timeout_too_large(self):
+        r = self.post({
+            "api_key": "abc",
+            "name": "Foo",
+            "tags": "bar,baz",
+            "timeout": 700000,
+            "grace": 60
+        }    
+        )
+        self.assertEqual(r.status_code, 400)
+        self.assertEqual(r.json()["error"],"timeout is too large" )
+
+    
