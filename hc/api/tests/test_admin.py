@@ -14,11 +14,10 @@ class ApiAdminTestCase(BaseTestCase):
         self.alice.save()
 
     def test_it_shows_channel_list_with_pushbullet(self):
-        self.client.login(username="alice@example.org", password="password")
-
-        ch = Channel(user=self.alice, kind="pushbullet", value="test-token")
-        ch.save()
-
-        channel = Channel.objects.get(kind="pushbullet")
-        #Assert for the push bullet
-        self.assertEqual("pushbullet", channel.kind)
+    	'''Test admin can add channel'''
+    	self.client.login(username="alice@example.org", password="password")
+    	ch = Channel(user=self.alice, kind="pushbullet", value="test-token")
+    	ch.save()
+    	channel = Channel.objects.get(kind="pushbullet")
+    	#Assert for the push bullet
+    	self.assertEqual("pushbullet", channel.kind)
