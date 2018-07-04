@@ -46,8 +46,8 @@ class ListChecksTestCase(BaseTestCase):
         ### last_ping, n_pings and pause_url
         pause_url1 = '{}/api/v1/checks/{}/pause'.format(settings.SITE_ROOT, self.a1.code)
         pause_url2 = '{}/api/v1/checks/{}/pause'.format(settings.SITE_ROOT, self.a2.code)
-        alice1 = doc['checks'][0]
-        alice2 = doc['checks'][1]
+        alice1 = checks['Alice 1']
+        alice2 = checks['Alice 2']
         self.assertEqual(alice1['timeout'], 3600)
         self.assertEqual(alice1['grace'], 900)
         self.assertEqual(alice1['ping_url'], self.a1.url())
@@ -78,3 +78,17 @@ class ListChecksTestCase(BaseTestCase):
 
     
     ### Test that it accepts an api_key in the request
+
+    def test_it_accepts_api_key_in_request(self):
+        # test it rejects wrong api_key
+        wrong_api_key = 'aajnsajs'
+        response = self.client.get("/api/v1/checks/", HTTP_X_API_KEY=wrong_api_key)
+        self.assertEqual(response.status_code, 400)
+
+        # test it accepts the right api_key
+        right_api_key = 'abc'
+        response = self.client.get("/api/v1/checks/", HTTP_X_API_KEY=right_api_key)
+        self.assertEqual(response.status_code, 200)
+
+
+
