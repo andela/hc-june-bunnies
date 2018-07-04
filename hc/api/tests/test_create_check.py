@@ -80,8 +80,15 @@ class CreateCheckTestCase(BaseTestCase):
         self.assertEqual(responce.json()["error"], "timeout is not a number")
 
     def test_it_rejects_non_string_name(self):
-        self.post({"api_key": "abc", "name": False},
-                  expected_error="name is not a string")
+        r = self.post({
+            "api_key": "abc",
+             "name": False,
+             "tags": "cronjob",
+             "timeout": 60000,
+             "grace": 120,
+            })
+        self.assertEqual(r.status_code, 400)
+        self.assertEqual(r.json()["error"], "name is not a string")
 
     def test_it_can_assign_check_to_all_channels(self):
         ### Test for the assignment of channels
