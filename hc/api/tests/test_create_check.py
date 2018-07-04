@@ -62,10 +62,21 @@ class CreateCheckTestCase(BaseTestCase):
         self.assertEqual(response.json()["error"], "wrong api_key")
 
     def test_it_handles_invalid_json(self):
+<<<<<<< HEAD
         ### Make the post request with invalid json data type
         response = {'status_code': 400, 'error': "could not parse request body"} ### This is just a placeholder variable
         self.assertEqual(response['status_code'], 400)
         self.assertEqual(response["error"], "could not parse request body")
+=======
+        ### Make the post
+        #  request with invalid json data type
+        response = self.client.post(self.URL,{
+            "api_key": "abc",
+            "name": "Foo"
+            })
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json()["error"], "could not parse request body")
+>>>>>>> fix the invalid json test
 
     def test_it_rejects_wrong_api_key(self):
         responce = self.post({"api_key": "wrong"},
@@ -82,7 +93,7 @@ class CreateCheckTestCase(BaseTestCase):
     def test_it_rejects_non_string_name(self):
         r = self.post({
             "api_key": "abc",
-             "name": False,
+             'name': 30,
              "tags": "cronjob",
              "timeout": 60000,
              "grace": 120,
@@ -137,4 +148,3 @@ class CreateCheckTestCase(BaseTestCase):
         self.assertEqual(r.status_code, 400)
         self.assertEqual(r.json()["error"],"timeout is too large" )
 
-    
