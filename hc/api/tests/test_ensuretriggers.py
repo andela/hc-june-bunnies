@@ -28,5 +28,5 @@ class EnsureTriggersTestCase(TestCase):
         check.save()
         check.refresh_from_db()
         alert_after_refresh = check.alert_after
-        ### Checks that alert_after is lesser than the check's alert_after
+        #Test that alert_after is lesser than the check's alert_after
         assert alert_after_refresh > alert_after 
