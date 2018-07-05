@@ -28,7 +28,6 @@ class SendAlertsTestCase(BaseTestCase):
             handled_names.append(args[0].name)
 
         self.assertEqual(set(names), set(handled_names))
-        # The above assert fails. Make it pass
 
     def test_it_handles_grace_period(self):
         check = Check(user=self.alice, status="up")
@@ -38,7 +37,7 @@ class SendAlertsTestCase(BaseTestCase):
 
         # Expect no exceptions--
         result = Command().handle_one(check)
-        self.assertEqual(True,result, "handle_one should return True")
+        self.assertEqual(True, result, "handle_one should return True")
 
     @patch("hc.api.management.commands.sendalerts.Command.handle_one")
     def test_handle_many_true(self, mock):
