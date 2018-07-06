@@ -51,3 +51,4 @@ class SendAlertsTestCase(BaseTestCase):
             check.save()
         result = Command().handle_many()
         self.assertEqual(result, True, "handle_many should return True")
+        
