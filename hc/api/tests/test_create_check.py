@@ -20,7 +20,6 @@ class CreateCheckTestCase(BaseTestCase):
             this_error = response.json()
             # Asserts that the expected error is the response error
             self.assertIn(this_error["error"], error_list)
-
         return response
 
     def test_it_works(self):
@@ -31,16 +30,12 @@ class CreateCheckTestCase(BaseTestCase):
             "timeout": 3600,
             "grace": 60
         })
-
         self.assertEqual(response.status_code, 201)
-
         doc = response.json()
         assert "ping_url" in doc
         self.assertEqual(doc["name"], "Foo")
         self.assertEqual(doc["tags"], "bar,baz")
-
         # Asserts the expected last_ping and n_pings values
-
         self.assertEqual(Check.objects.count(), 1)
         check = Check.objects.get()
         self.assertEqual(check.name, "Foo")
@@ -50,8 +45,7 @@ class CreateCheckTestCase(BaseTestCase):
 
     def test_it_accepts_api_key_in_header(self):
         payload = json.dumps({"name": "Foo"})
-
-        ### Make the post request and get the response
+        # Makes the post request and gets the response
         response = self.post({
             "api_key": "abc",
             "name": "Foo"
@@ -59,13 +53,13 @@ class CreateCheckTestCase(BaseTestCase):
         self.assertEqual(response.status_code, 201)
 
     def test_it_handles_missing_request_body(self):
-        ### Make the post request with a missing body and get the response
+        # Makes the post request with a missing body and gets the response
         response = self.post({"api_key": ""}) 
         self.assertEqual(response.status_code, 400)
         self.assertEqual(response.json()["error"], "wrong api_key")
 
     def test_it_handles_invalid_json(self):
-        ### Make the post
+        # Makes the post
         #  request with invalid json data type
         response = self.client.post(self.URL,{
             "api_key": "abc",
@@ -98,12 +92,12 @@ class CreateCheckTestCase(BaseTestCase):
         self.assertEqual(r.json()["error"], "name is not a string")
 
     def test_it_can_assign_check_to_all_channels(self):
-        ### Test for the assignment of channels
+        # Tests for the assignment of channels
         ch = Channel(user=self.alice, kind="pushbullet", value="test checks")
         ch1 = Channel(user=self.alice, kind="slack", value="test checks")
         ch.save()
         ch1.save()
-        # register a new check and add it to all channels
+        # registers a new check and adds it to all channels
         response = self.post({
             "api_key": "abc",
             "name": "dbbackup",
@@ -112,14 +106,12 @@ class CreateCheckTestCase(BaseTestCase):
             "grace": 120,
             "channels": "*"
         })
-
         self.assertEqual(response.status_code, 201)
-        # assert that each channel now has one check assigned to it
+        # asserts that each channel now has one check assigned to it
         self.assertEqual(ch.checks.all().count(), 1)
         self.assertEqual(ch1.checks.all().count(), 1)
 
     def test_timeout_is_too_small(self):
-
         response = self.post({
             "api_key": "abc",
             "name": "dbbackup",
@@ -130,8 +122,7 @@ class CreateCheckTestCase(BaseTestCase):
         self.assertEqual(400,response.status_code)
         self.assertEqual('timeout is too small',response.json()['error'])
 
-
-    ### Test for the 'timeout is too small' and 'timeout is too large' errors
+    # Tests for the 'timeout is too small' and 'timeout is too large' errors
     def test_timeout_too_large(self):
         r = self.post({
             "api_key": "abc",
