@@ -13,11 +13,14 @@ class CreateCheckTestCase(BaseTestCase):
     def post(self, data, expected_error=None):
         response = self.client.post(self.URL, json.dumps(data),
                              content_type="application/json")
+        error_list = [ "wrong api_key","could not parse request body","timeout is not a number","name is not a string"]
 
         if expected_error:
             self.assertEqual(response.status_code, 400)
-            # Assert that the expected error is the response error
-        
+            this_error = response.json()
+            # Asserts that the expected error is the response error
+            self.assertIn(this_error["error"], error_list)
+
         return response
 
     def test_it_works(self):
@@ -36,7 +39,7 @@ class CreateCheckTestCase(BaseTestCase):
         self.assertEqual(doc["name"], "Foo")
         self.assertEqual(doc["tags"], "bar,baz")
 
-        ### Assert the expected last_ping and n_pings values
+        # Asserts the expected last_ping and n_pings values
 
         self.assertEqual(Check.objects.count(), 1)
         check = Check.objects.get()
@@ -62,12 +65,6 @@ class CreateCheckTestCase(BaseTestCase):
         self.assertEqual(response.json()["error"], "wrong api_key")
 
     def test_it_handles_invalid_json(self):
-<<<<<<< HEAD
-        ### Make the post request with invalid json data type
-        response = {'status_code': 400, 'error': "could not parse request body"} ### This is just a placeholder variable
-        self.assertEqual(response['status_code'], 400)
-        self.assertEqual(response["error"], "could not parse request body")
-=======
         ### Make the post
         #  request with invalid json data type
         response = self.client.post(self.URL,{
@@ -76,7 +73,6 @@ class CreateCheckTestCase(BaseTestCase):
             })
         self.assertEqual(response.status_code, 400)
         self.assertEqual(response.json()["error"], "could not parse request body")
->>>>>>> fix the invalid json test
 
     def test_it_rejects_wrong_api_key(self):
         response = self.post({"api_key": "wrong"},
