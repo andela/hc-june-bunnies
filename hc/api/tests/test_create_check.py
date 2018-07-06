@@ -11,14 +11,17 @@ class CreateCheckTestCase(BaseTestCase):
         super(CreateCheckTestCase, self).setUp()
 
     def post(self, data, expected_error=None):
-        r = self.client.post(self.URL, json.dumps(data),
+        response = self.client.post(self.URL, json.dumps(data),
                              content_type="application/json")
+        error_list = [ "wrong api_key","could not parse request body","timeout is not a number","name is not a string"]
 
         if expected_error:
-            self.assertEqual(r.status_code, 400)
-            ### Assert that the expected error is the response error
+            self.assertEqual(response.status_code, 400)
+            this_error = response.json()
+            #Asserts that the expected error is the response error
+            self.assertIn(this_error["error"], error_list)
 
-        return r
+        return response
 
     def test_it_works(self):
         r = self.post({
