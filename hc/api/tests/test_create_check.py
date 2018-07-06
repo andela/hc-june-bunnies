@@ -16,8 +16,8 @@ class CreateCheckTestCase(BaseTestCase):
 
         if expected_error:
             self.assertEqual(response.status_code, 400)
-            ### Assert that the expected error is the response error
-
+            # Assert that the expected error is the response error
+        
         return response
 
     def test_it_works(self):
@@ -72,16 +72,16 @@ class CreateCheckTestCase(BaseTestCase):
         self.assertEqual(response.json()["error"], "could not parse request body")
 
     def test_it_rejects_wrong_api_key(self):
-        responce = self.post({"api_key": "wrong"},
+        response = self.post({"api_key": "wrong"},
                   expected_error="wrong api_key")
-        self.assertEqual(responce.status_code, 400)
-        self.assertEqual(responce.json()["error"], "wrong api_key")
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json()["error"], "wrong api_key")
 
     def test_it_rejects_non_number_timeout(self):
-        responce = self.post({"api_key": "abc", "timeout": "oops"},
+        response = self.post({"api_key": "abc", "timeout": "oops"},
                   expected_error="timeout is not a number")
-        self.assertEqual(responce.status_code, 400)
-        self.assertEqual(responce.json()["error"], "timeout is not a number")
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json()["error"], "timeout is not a number")
 
     def test_it_rejects_non_string_name(self):
         r = self.post({
@@ -136,8 +136,6 @@ class CreateCheckTestCase(BaseTestCase):
             "tags": "bar,baz",
             "timeout": 700000,
             "grace": 60
-        }    
-        )
+        })
         self.assertEqual(r.status_code, 400)
         self.assertEqual(r.json()["error"],"timeout is too large" )
-
