@@ -29,6 +29,7 @@ class SendAlertsTestCase(BaseTestCase):
 
         self.assertEqual(set(names), set(handled_names))
 
+
     def test_it_handles_grace_period(self):
         check = Check(user=self.alice, status="up")
         # 1 day 30 minutes after ping the check is in grace period:
@@ -36,6 +37,7 @@ class SendAlertsTestCase(BaseTestCase):
         check.save()
 
         # Expect no exceptions--
+
         result = Command().handle_one(check)
         self.assertEqual(True, result, "handle_one should return True")
 
@@ -44,6 +46,7 @@ class SendAlertsTestCase(BaseTestCase):
         """Assert when Command's handle many that when handle_many should return True"""
         time = timezone.now() - timedelta(days=1)
         names = ["Name %d" % n for n in range(0, 1000)]
+
         for name in names:
             check = Check(user=self.bob, name=name)
             check.alert_after = time
@@ -51,4 +54,6 @@ class SendAlertsTestCase(BaseTestCase):
             check.save()
         result = Command().handle_many()
         self.assertEqual(result, True, "handle_many should return True")
+
         
+
