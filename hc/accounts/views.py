@@ -165,13 +165,20 @@ def profile(request):
 
             form = InviteTeamMemberForm(request.POST)
             if form.is_valid():
-
+                #  get email and check to add to
                 email = form.cleaned_data["email"]
+                check_name = form.cleaned_data["check"]
                 try:
                     user = User.objects.get(email=email)
                 except User.DoesNotExist:
                     user = _make_user(email)
 
+                try:
+                    check = Check.objects.get(name=check_name)
+                except Exception:
+                    messages.warning(request, "Check named %s not found!" % check_name)
+                    return redirect("hc-profile")
+                
                 profile.invite(user)
                 messages.success(request, "Invitation to %s sent!" % email)
         elif "remove_team_member" in request.POST:
