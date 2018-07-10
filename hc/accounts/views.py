@@ -174,12 +174,12 @@ def profile(request):
                     user = _make_user(email)
 
                 try:
-                    check = Check.objects.get(name=check_name)
+                    check = Check.objects.get(name=check_name, user=request.user)
                 except Exception:
                     messages.warning(request, "Check named %s not found!" % check_name)
                     return redirect("hc-profile")
                 
-                profile.invite(user)
+                profile.invite(user, check=check)
                 messages.success(request, "Invitation to %s sent!" % email)
         elif "remove_team_member" in request.POST:
             form = RemoveTeamMemberForm(request.POST)
