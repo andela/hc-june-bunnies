@@ -17,7 +17,8 @@ STATUSES = (
     ("up", "Up"),
     ("down", "Down"),
     ("new", "New"),
-    ("paused", "Paused")
+    ("paused", "Paused"),
+    ("too_often", "too_Often")
 )
 DEFAULT_TIMEOUT = td(days=1)
 DEFAULT_GRACE = td(hours=1)
@@ -89,7 +90,14 @@ class Check(models.Model):
         if self.last_ping + self.timeout + self.grace > now:
             return "up"
 
-        return "down"
+     # function to check whether the ping is being made too often or not
+    def often():
+        now = timezone.now()
+        if (self.last_ping + self.timeout - self.grace) > now:
+            return True
+        else:
+            return False
+
 
     def in_grace_period(self):
         if self.status in ("new", "paused"):
