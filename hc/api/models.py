@@ -90,10 +90,15 @@ class Check(models.Model):
         if self.last_ping + self.timeout + self.grace > now:
             return "up"
 
+        if self.last_ping + self.timeout - self.grace > now:
+            return "often"
+
+        return "down"
+
      # function to check whether the ping is being made too often or not
-    def often():
+    def often(self):
         now = timezone.now()
-        if (self.last_ping + self.timeout - self.grace) > now:
+        if self.last_ping + self.timeout - self.grace > now:
             return True
         else:
             return False
