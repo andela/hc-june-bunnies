@@ -87,22 +87,12 @@ class Check(models.Model):
 
         now = timezone.now()
 
-        if self.last_ping + self.timeout + self.grace > now:
-            return "up"
-
         if self.last_ping + self.timeout - self.grace > now:
             return "often"
+        elif self.last_ping + self.timeout + self.grace > now:
+            return "up"
 
         return "down"
-
-     # function to check whether the ping is being made too often or not
-    def often(self):
-        now = timezone.now()
-        if self.last_ping + self.timeout - self.grace > now:
-            return True
-        else:
-            return False
-
 
     def in_grace_period(self):
         if self.status in ("new", "paused"):

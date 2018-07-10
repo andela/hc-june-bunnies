@@ -20,21 +20,14 @@ def ping(request, code):
         check = Check.objects.get(code=code)
     except Check.DoesNotExist:
         return HttpResponseBadRequest()
-        
-    # checking if ping is made too early, and if so save the status as too_often
+
+    # if check is new or paused
     if check.status in ('new', 'paused'):
-        check.status = 'up'
-    if check.status != 'down':
-        if check.often():
-            check.status = "often"
-            check.save()
+         check.status = 'up'
 
 
     check.n_pings = F("n_pings") + 1
     check.last_ping = timezone.now()
-    if check.status in ("new", "paused"):
-        check.status = "up"
-
     check.save()
     check.refresh_from_db()
 
