@@ -4,7 +4,9 @@ $(function () {
     var HOUR = {name: "hour", nsecs: MINUTE.nsecs * 60};
     var DAY = {name: "day", nsecs: HOUR.nsecs * 24};
     var WEEK = {name: "week", nsecs: DAY.nsecs * 7};
-    var UNITS = [WEEK, DAY, HOUR, MINUTE];
+    var MONTH = {name:"month", nsecs: DAY.nsecs * 30};
+    var SIX_MONTHS = {name:"six_months", nsecs: MONTH.nsecs * 6};
+    var UNITS = [ SIX_MONTHS, MONTH, WEEK, DAY, HOUR, MINUTE];
 
     var secsToText = function(total) {
         var remainingSeconds = Math.floor(total);
@@ -29,21 +31,22 @@ $(function () {
 
         return result;
     }
-
+    //To change the intervals on the period slider for viewing and choosing timeouts"""
     var periodSlider = document.getElementById("period-slider");
     noUiSlider.create(periodSlider, {
         start: [20],
         connect: "lower",
         range: {
             'min': [60, 60],
-            '33%': [3600, 3600],
-            '66%': [86400, 86400],
-            '83%': [604800, 604800],
-            'max': 2592000,
+            '15%': [3600, 3600],
+            '30%': [86400, 86400],
+            '50%': [7776000,7776000],
+            '85%': [10368000, 10368000],
+            'max': 15552000,
         },
         pips: {
             mode: 'values',
-            values: [60, 1800, 3600, 43200, 86400, 604800, 2592000],
+            values: [60, 3600, 86400, 7776000, 10368000, 15552000],
             density: 4,
             format: {
                 to: secsToText,
@@ -58,21 +61,22 @@ $(function () {
         $("#update-timeout-timeout").val(rounded);
     });
 
-
+    //To change the intervals on the grace slider for viewing and choosing grace periods"""
     var graceSlider = document.getElementById("grace-slider");
     noUiSlider.create(graceSlider, {
         start: [20],
         connect: "lower",
         range: {
             'min': [60, 60],
-            '33%': [3600, 3600],
-            '66%': [86400, 86400],
-            '83%': [604800, 604800],
-            'max': 2592000,
+            '15%': [3600, 3600],
+            '30%': [86400, 86400],
+            '50%': [7776000,7776000],
+            '85%': [10368000, 10368000],
+            'max': 15552000,
         },
         pips: {
             mode: 'values',
-            values: [60, 1800, 3600, 43200, 86400, 604800, 2592000],
+            values: [60, 3600, 86400, 7776000, 10368000, 15552000],
             density: 4,
             format: {
                 to: secsToText,
