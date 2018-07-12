@@ -26,6 +26,11 @@ def ping(request, code):
          check.status = 'up'
     elif check.too_often():
         check.status = 'often'
+    # if status of check was "often" before and the check has failed then rerun again, 
+    # the status should change from "often" to "up"
+    elif check.status in ('down'):
+        check.status = 'up'
+
 
     check.n_pings = F("n_pings") + 1
     check.last_ping = timezone.now()
