@@ -26,6 +26,7 @@ def ping(request, code):
          check.status = 'up'
     elif check.too_often():
         check.status = 'often'
+        check.send_alert()
     # if status of check was "often" before and the check has failed then rerun again, 
     # the status should change from "often" to "up"
     elif check.status in ('down'):
