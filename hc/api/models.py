@@ -86,6 +86,7 @@ class Check(models.Model):
 
         if self.status in ("new", "paused"):
             return self.status
+        # if check is pinged too often
         if self.status in ("often"):
             if self.last_ping + self.timeout + self.grace < now:
                 return "down"
