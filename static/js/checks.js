@@ -31,7 +31,6 @@ $(function () {
 
         return result;
     }
-    //To change the intervals on the period slider for viewing and choosing timeouts"""
     var periodSlider = document.getElementById("period-slider");
     noUiSlider.create(periodSlider, {
         start: [20],
@@ -61,7 +60,6 @@ $(function () {
         $("#update-timeout-timeout").val(rounded);
     });
 
-    //To change the intervals on the grace slider for viewing and choosing grace periods"""
     var graceSlider = document.getElementById("grace-slider");
     noUiSlider.create(graceSlider, {
         start: [20],
