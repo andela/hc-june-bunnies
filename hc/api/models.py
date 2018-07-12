@@ -89,13 +89,17 @@ class Check(models.Model):
         # if check is pinged too often
         if self.status in ("often"):
             if self.last_ping + self.timeout + self.grace < now:
+                self.status = "down"
+                self.save
                 return "down"
             else:
                 return self.status
 
         if self.last_ping + self.timeout + self.grace > now:
             return "up"
-
+        # change and save the status to 'down'
+        self.status = "down"
+        self.save
         return "down"
     
     def too_often(self):
