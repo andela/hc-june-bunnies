@@ -172,9 +172,8 @@ def profile(request):
                     user = User.objects.get(email=email)
                 except User.DoesNotExist:
                     user = _make_user(email)
-
                 try:
-                    check = Check.objects.get(name=check_name, user=request.user)
+                    check = Check.objects.get(name=check_name, user=request.team.user)
                 except Exception:
                     messages.warning(request, "Check named %s not found!" % check_name)
                     return redirect("hc-profile")
