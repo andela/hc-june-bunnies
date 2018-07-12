@@ -21,8 +21,9 @@ class Command(BaseCommand):
         now = timezone.now()
         going_down = query.filter(alert_after__lt=now, status="up")
         going_up = query.filter(alert_after__gt=now, status="down")
+        nag = query.filter(nag_after__lt=now, nag_status=True, status="down")
         # Don't combine this in one query so Postgres can query using index:
-        checks = list(going_down.iterator()) + list(going_up.iterator())
+        checks = list(going_down.iterator()) + list(going_up.iterator()) + list(nag.iterator())
         if not checks:
             return False
 
@@ -40,9 +41,14 @@ class Command(BaseCommand):
 
         """
 
-        # Save the new status. If sendalerts crashes,
+        # Saves the new status. If sendalerts crashes,
         # it won't process this check again.
         check.status = check.get_status()
+        now = timezone.now()
+        # Set the next nag time
+        if check.nag() == 'nag':
+            interval = check.timeout + check.grace
+            check.nag_after = now + interval
         check.save()
 
         tmpl = "\nSending alert, status=%s, code=%s\n"

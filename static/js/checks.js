@@ -203,5 +203,16 @@ $(function () {
         prompt("Press Ctrl+C to select:", text)
     });
 
+    $(".update-nag").click(function() {
+        var $this = $(this);
+
+        $("#update-nag-form").attr("action", $this.data("url"));
+        $("#update-nag-input").val($this.data("nag"));
+        $('#update-nag-modal').modal("show");
+        $("#update-nag-input").focus();
+
+        return false;
+    });
+
 
 });

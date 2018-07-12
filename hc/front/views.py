@@ -575,3 +575,21 @@ def privacy(request):
 
 def terms(request):
     return render(request, "front/terms.html", {})
+
+
+@login_required
+@uuid_or_400
+def nag_user(request, code):
+    """Function for updating the nag option"""
+    assert request.method == "POST"
+
+    check = get_object_or_404(Check, code=code)
+    if check.user_id != request.team.user.id:
+        return HttpResponseForbidden()
+
+    form = NagUserForm(request.POST)
+    if form.is_valid():
+        check.nag_status = form.cleaned_data["nag"]
+        check.save()
+
+    return redirect("hc-checks")
