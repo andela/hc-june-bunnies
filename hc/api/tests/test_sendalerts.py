@@ -31,7 +31,7 @@ class SendAlertsTestCase(BaseTestCase):
 
 
     def test_it_handles_grace_period(self):
-        check = Check(user=self.alice, status="up")
+        check = Check(user=self.alice, status="up", nag_status=True)
         # 1 day 30 minutes after ping the check is in grace period:
         check.last_ping = timezone.now() - timedelta(days=1, minutes=30)
         check.save()
@@ -40,6 +40,7 @@ class SendAlertsTestCase(BaseTestCase):
 
         result = Command().handle_one(check)
         self.assertEqual(True, result, "handle_one should return True")
+
 
     @patch("hc.api.management.commands.sendalerts.Command.handle_one")
     def test_handle_many_true(self, mock):

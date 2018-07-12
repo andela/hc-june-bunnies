@@ -47,7 +47,7 @@ class Command(BaseCommand):
         now = timezone.now()
         # Set the next nag time
         if check.nag() == 'nag':
-            interval = check.timeout + check.grace
+            interval = check.new_nag_after
             check.nag_after = now + interval
         check.save()
 
