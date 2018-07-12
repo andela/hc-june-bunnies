@@ -24,7 +24,8 @@ def ping(request, code):
     # if check is new or paused
     if check.status in ('new', 'paused'):
          check.status = 'up'
-
+    elif check.too_often():
+        check.status = 'often'
 
     check.n_pings = F("n_pings") + 1
     check.last_ping = timezone.now()
