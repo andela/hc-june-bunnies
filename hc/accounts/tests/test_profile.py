@@ -44,7 +44,6 @@ class ProfileTestCase(BaseTestCase):
             member_emails.add(member.user.email)
 
         # Assert the existence of the member emails
-        
         self.assertTrue("frank@example.org" in member_emails)
         self.assertTrue("bob@example.org" in member_emails)
 
