@@ -11,13 +11,14 @@ class ProfileTestCase(BaseTestCase):
         self.client.login(username="alice@example.org", password="password")
 
         form = {"set_password": "1"}
-        r = self.client.post("/accounts/profile/", form)
-        assert r.status_code == 302
+        response = self.client.post("/accounts/profile/", form)
+        assert response.status_code == 302
 
         # profile.token should be set now
         self.alice.profile.refresh_from_db()
         token = self.alice.profile.token
-        ### Assert that the token is set
+        # Assert that the token is set
+        self.assertTrue(token)
 
         ### Assert that the email was sent and check email content
 
@@ -32,9 +33,12 @@ class ProfileTestCase(BaseTestCase):
     def test_it_adds_team_member(self):
         self.client.login(username="alice@example.org", password="password")
 
-        form = {"invite_team_member": "1", "email": "frank@example.org"}
-        r = self.client.post("/accounts/profile/", form)
-        assert r.status_code == 200
+        check = Check(name="Alice", user=self.alice)
+        check.save()
+
+        form = {"invite_team_member": "1", "email": "frank@example.org", "check":"Alice"}
+        response = self.client.post("/accounts/profile/", form)
+        self.assertEqual(response.status_code, 200)
 
         member_emails = set()
         for member in self.alice.profile.member_set.all():
