@@ -11,7 +11,7 @@ class UpdateTimeoutTestCase(BaseTestCase):
 
     def test_it_works(self):
         url = "/checks/%s/timeout/" % self.check.code
-        payload = {"timeout": 3600, "grace": 60}
+        payload = {"timeout": 3600, "grace": 60, "new_nag_after": 60}
 
         self.client.login(username="alice@example.org", password="password")
         r = self.client.post(url, data=payload)
