@@ -91,6 +91,7 @@ class Check(models.Model):
             if self.last_ping + self.timeout + self.grace < now:
                 self.status = "down"
                 self.save
+                self.send_alert()
                 return "down"
             else:
                 return self.status

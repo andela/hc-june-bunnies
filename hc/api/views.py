@@ -24,12 +24,15 @@ def ping(request, code):
     # if check is new or paused
     if check.status in ('new', 'paused'):
          check.status = 'up'
+         check.send_alert()
+
     elif check.too_often():
         check.status = 'often'
         check.send_alert()
     # if status of check was "often" before and the check has failed then rerun again, 
     # the status should change from "often" to "up"
     elif check.status in ('down'):
+        check.send_alert()
         check.status = 'up'
 
 
