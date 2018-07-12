@@ -2,6 +2,7 @@ from django.contrib.auth.models import User
 from django.test import TestCase
 
 from hc.accounts.models import Member, Profile
+from hc.api.models import Check
 
 
 class BaseTestCase(TestCase):
@@ -27,6 +28,7 @@ class BaseTestCase(TestCase):
         self.bobs_profile.current_team = self.profile
         self.bobs_profile.save()
 
+    
         m = Member(team=self.profile, user=self.bob)
         m.save()
 
