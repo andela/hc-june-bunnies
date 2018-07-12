@@ -11,7 +11,7 @@ from django.db import models
 from django.urls import reverse
 from django.utils import timezone
 from hc.lib import emails
-from hc.api.models import Check
+from hc.api.models import Check, Channel
 
 
 class Profile(models.Model):
@@ -82,14 +82,16 @@ class Profile(models.Model):
             member = Member(team=self, user=user)
             member.save()
             member.check_assigned.add(check.id)
-            
+        # assign check to user channels
+        channels = Channel.objects.filter(user=user)
+        for channel in channels:
+            channel.checks.add(check.id)
+        # Switch the invited user over to the new team so they
+        # notice the new team on next visit:
+        user.profile.current_team = self
+        user.profile.save()
 
-            # Switch the invited user over to the new team so they
-            # notice the new team on next visit:
-            user.profile.current_team = self
-            user.profile.save()
-
-            user.profile.send_instant_login_link(self)
+        user.profile.send_instant_login_link(self)
 
 
 class Member(models.Model):

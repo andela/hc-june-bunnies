@@ -35,7 +35,6 @@ def my_checks(request):
     if members:
         checks = []
         for member in members:
-            check_id = member.check_assigned
             checks.extend(member.check_assigned.all())
         checks.extend(Check.objects.filter(user=request.user).all())
         
@@ -286,10 +285,18 @@ def channels(request):
         channel.checks = new_checks
         return redirect("hc-channels")
 
-    channels = Channel.objects.filter(user=request.team.user).order_by("created")
+    checks = []
+    members = Member.objects.filter(user=request.user)
+    if members:
+        for member in members:
+            checks.extend(member.check_assigned.all())
+
+    checks.extend([check for check in Check.objects.filter(user=request.user)])
+    
+    channels = Channel.objects.filter(user=request.user).order_by("created")
     channels = channels.annotate(n_checks=Count("checks"))
 
-    num_checks = Check.objects.filter(user=request.team.user).count()
+    num_checks = len(checks)
 
     ctx = {
         "page": "channels",
@@ -332,7 +339,13 @@ def channel_checks(request, code):
         return HttpResponseForbidden()
 
     assigned = set(channel.checks.values_list('code', flat=True).distinct())
-    checks = Check.objects.filter(user=request.team.user).order_by("created")
+    checks = []
+    members = Member.objects.filter(user=request.user)
+    if members:
+        for member in members:
+            checks.extend(member.check_assigned.all())
+    q = Check.objects.filter(user=request.user).order_by("created")
+    checks.extend(list(q))
 
     ctx = {
         "checks": checks,
