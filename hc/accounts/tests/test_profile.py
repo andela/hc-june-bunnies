@@ -7,6 +7,12 @@ from hc.api.models import Check
 
 class ProfileTestCase(BaseTestCase):
 
+    def setUp(self):
+        super(ProfileTestCase, self).setUp()
+        self.check = Check(name="Alice", user=self.alice)
+        self.check.save()
+
+
     def test_it_sends_set_password_link(self):
         self.client.login(username="alice@example.org", password="password")
 
@@ -20,7 +26,7 @@ class ProfileTestCase(BaseTestCase):
         # Assert that the token is set
         self.assertTrue(token)
 
-        #Assert that the email was sent and check email content
+        # Assert that the email was sent and check email content
         self.assertEqual(len(mail.outbox), 1)
         self.assertEqual(mail.outbox[0].subject, 'Set password on healthchecks.io')
  
@@ -32,14 +38,15 @@ class ProfileTestCase(BaseTestCase):
 
         self.alice.profile.send_report()
 
-        ###Assert that the email was sent and check email content
+        # Assert that the email was sent and check email content
+        self.assertEqual(len(mail.outbox), 1)
+        self.assertEqual(mail.outbox[0].subject, 'Monthly Report')
+
 
     def test_it_adds_team_member(self):
         self.client.login(username="alice@example.org", password="password")
 
-        check = Check(name="Alice", user=self.alice)
-        check.save()
-
+        
         form = {"invite_team_member": "1", "email": "frank@example.org", "check":"Alice"}
         response = self.client.post("/accounts/profile/", form)
         self.assertEqual(response.status_code, 200)
@@ -51,7 +58,10 @@ class ProfileTestCase(BaseTestCase):
         # Assert the existence of the member emails
         self.assertTrue("frank@example.org" in member_emails)
 
-        ###Assert that the email was sent and check email content
+        # Assert that the email was sent and check email content
+        self.assertEqual(len(mail.outbox), 1)
+        self.assertEqual(mail.outbox[0].subject, 'You have been invited to join alice@example.org on healthchecks.io')
+
 
     def test_add_team_member_checks_team_access_allowed_flag(self):
         self.client.login(username="charlie@example.org", password="password")
