@@ -44,8 +44,7 @@ class ProfileTestCase(BaseTestCase):
         for member in self.alice.profile.member_set.all():
             member_emails.add(member.user.email)
 
-        ### Assert the existence of the member emails
-
+        # Assert the existence of the member emails
         self.assertTrue("frank@example.org" in member_emails)
 
         ###Assert that the email was sent and check email content
