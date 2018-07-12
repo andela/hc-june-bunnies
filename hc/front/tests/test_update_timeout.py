@@ -20,10 +20,11 @@ class UpdateTimeoutTestCase(BaseTestCase):
         check = Check.objects.get(code=self.check.code)
         assert check.timeout.total_seconds() == 3600
         assert check.grace.total_seconds() == 60
+        assert check.new_nag_after.total_seconds() == 60
 
     def test_team_access_works(self):
         url = "/checks/%s/timeout/" % self.check.code
-        payload = {"timeout": 7200, "grace": 60}
+        payload = {"timeout": 7200, "grace": 60, "new_nag_after": 60}
 
         # Logging in as bob, not alice. Bob has team access so this
         # should work.
