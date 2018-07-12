@@ -17,7 +17,7 @@ from hc.api.decorators import uuid_or_400
 from hc.api.models import DEFAULT_GRACE, DEFAULT_TIMEOUT, Channel, Check, Ping
 from hc.front.forms import (AddChannelForm, AddWebhookForm, NameTagsForm,
                             TimeoutForm)
-
+from hc.accounts.models import Member
 
 # from itertools recipes:
 def pairwise(iterable):
@@ -25,13 +25,23 @@ def pairwise(iterable):
     a, b = tee(iterable)
     next(b, None)
     return zip(a, b)
-
+ 
 
 @login_required
 def my_checks(request):
-    q = Check.objects.filter(user=request.team.user).order_by("created")
-    checks = list(q)
+    # check if user is a member of any team
 
+    members = Member.objects.filter(user=request.user)
+    if members:
+        checks = []
+        for member in members:
+            checks.extend(member.check_assigned.all())
+        checks.extend(Check.objects.filter(user=request.user).all())
+        
+    else:
+        q = Check.objects.filter(user=request.team.user).order_by("created")
+        checks =list(q)
+    
     counter = Counter()
     down_tags, grace_tags = set(), set()
     for check in checks:
@@ -56,7 +66,6 @@ def my_checks(request):
         "grace_tags": grace_tags,
         "ping_endpoint": settings.PING_ENDPOINT
     }
-
     return render(request, "front/my_checks.html", ctx)
 
 
@@ -276,10 +285,18 @@ def channels(request):
         channel.checks = new_checks
         return redirect("hc-channels")
 
-    channels = Channel.objects.filter(user=request.team.user).order_by("created")
+    checks = []
+    members = Member.objects.filter(user=request.user)
+    if members:
+        for member in members:
+            checks.extend(member.check_assigned.all())
+
+    checks.extend([check for check in Check.objects.filter(user=request.user)])
+    
+    channels = Channel.objects.filter(user=request.user).order_by("created")
     channels = channels.annotate(n_checks=Count("checks"))
 
-    num_checks = Check.objects.filter(user=request.team.user).count()
+    num_checks = len(checks)
 
     ctx = {
         "page": "channels",
@@ -322,7 +339,13 @@ def channel_checks(request, code):
         return HttpResponseForbidden()
 
     assigned = set(channel.checks.values_list('code', flat=True).distinct())
-    checks = Check.objects.filter(user=request.team.user).order_by("created")
+    checks = []
+    members = Member.objects.filter(user=request.user)
+    if members:
+        for member in members:
+            checks.extend(member.check_assigned.all())
+    q = Check.objects.filter(user=request.user).order_by("created")
+    checks.extend(list(q))
 
     ctx = {
         "checks": checks,

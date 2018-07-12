@@ -7,21 +7,30 @@ from hc.api.models import Check
 
 class ProfileTestCase(BaseTestCase):
 
+    def setUp(self):
+        super(ProfileTestCase, self).setUp()
+        self.check = Check(name="Alice", user=self.alice)
+        self.check.save()
+
+
     def test_it_sends_set_password_link(self):
         self.client.login(username="alice@example.org", password="password")
 
         form = {"set_password": "1"}
-        r = self.client.post("/accounts/profile/", form)
-        assert r.status_code == 302
+        response = self.client.post("/accounts/profile/", form)
+        assert response.status_code == 302
 
         # profile.token should be set now
         self.alice.profile.refresh_from_db()
         token = self.alice.profile.token
         # Assert that the token is set
-        assert token
+
+        self.assertTrue(token)
+
         # Assert that the email was sent and check email content
         self.assertEqual(len(mail.outbox), 1)
         self.assertEqual(mail.outbox[0].subject, 'Set password on healthchecks.io')
+ 
 
     def test_it_sends_report(self):
         check = Check(name="Test Check", user=self.alice)
@@ -35,9 +44,10 @@ class ProfileTestCase(BaseTestCase):
     def test_it_adds_team_member(self):
         self.client.login(username="alice@example.org", password="password")
 
-        form = {"invite_team_member": "1", "email": "frank@example.org"}
-        r = self.client.post("/accounts/profile/", form)
-        assert r.status_code == 200
+        
+        form = {"invite_team_member": "1", "email": "frank@example.org", "check":"Alice"}
+        response = self.client.post("/accounts/profile/", form)
+        self.assertEqual(response.status_code, 200)
 
         member_emails = set()
         for member in self.alice.profile.member_set.all():
