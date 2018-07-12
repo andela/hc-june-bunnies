@@ -158,6 +158,7 @@ def profile(request):
             if form.is_valid():
                 profile.reports_allowed = form.cleaned_data["reports_allowed"]
                 profile.save()
+                profile.send_report()
                 messages.success(request, "Your settings have been updated!")
         elif "invite_team_member" in request.POST:
             if not profile.team_access_allowed:
