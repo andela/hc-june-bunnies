@@ -116,6 +116,7 @@
             {% csrf_token %}
             <input type="hidden" name="timeout" id="update-timeout-timeout" />
             <input type="hidden" name="grace" id="update-timeout-grace" />
+            <input type="hidden" name="new_nag_after" id="update-timeout-nag" />
             <div class="modal-content">
                 <div class="modal-body">
                     <div class="update-timeout-info text-center">
@@ -148,6 +149,22 @@
                     </div>
 
                     <div id="grace-slider"></div>
+
+                    <div class="update-timeout-info text-center">
+                        <span
+                            class="update-timeout-label"
+                            data-toggle="tooltip"
+                            title="When check is down, what period to wait until alerts are resent">
+                            Nag Time
+                        </span>
+                        <span
+                            id="nag-slider-value"
+                            class="update-timeout-value">
+                            1 day
+                        </span>
+                    </div>
+
+                    <div id="nag-slider"></div>
 
                     <div class="update-timeout-terms">
                         <p>

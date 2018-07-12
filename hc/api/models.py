@@ -55,6 +55,7 @@ class Check(models.Model):
     status = models.CharField(max_length=6, choices=STATUSES, default="new")
     nag_after = models.DateTimeField(null=True, blank=True)
     nag_status = models.BooleanField(default=False)
+    new_nag_after = models.DurationField(default=DEFAULT_GRACE+DEFAULT_TIMEOUT)
 
     def name_then_code(self):
         if self.name:
