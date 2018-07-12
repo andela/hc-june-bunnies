@@ -29,11 +29,20 @@ def pairwise(iterable):
 
 @login_required
 def my_checks(request):
-    member_checks = Member.objects.filter(user=request.user)
-    checks = [Check.objects.filter(id=item.check_assigned_id)[0] for item in member_checks ]
-    # q = Check.objects.filter(user=request.team.user).order_by("created")
-    # checks = list(q)
+    # check if user is a member of any team
 
+    members = Member.objects.filter(user=request.user)
+    if members:
+        checks = []
+        for member in members:
+            check_id = member.check_assigned
+            checks.extend(member.check_assigned.all())
+        checks.extend(Check.objects.filter(user=request.user).all())
+        
+    else:
+        q = Check.objects.filter(user=request.team.user).order_by("created")
+        checks =list(q)
+    
     counter = Counter()
     down_tags, grace_tags = set(), set()
     for check in checks:
@@ -58,7 +67,6 @@ def my_checks(request):
         "grace_tags": grace_tags,
         "ping_endpoint": settings.PING_ENDPOINT
     }
-
     return render(request, "front/my_checks.html", ctx)
 
 
