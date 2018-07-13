@@ -1,4 +1,6 @@
 from django.test import Client, TestCase
+from django.http import HttpResponseBadRequest
+import datetime
 
 from hc.api.models import Check, Ping
 
@@ -18,6 +20,11 @@ class PingTestCase(TestCase):
 
         ping = Ping.objects.latest("id")
         assert ping.scheme == "http"
+    
+    def test_non_existent_check(self):
+        code = "345*&"
+        r = self.client.get("/ping/%s/" % code)
+        assert r.status_code == 404
 
     # test to check that a check pinged too often changes status to 'often'
     def test_too_often(self):
@@ -31,7 +38,17 @@ class PingTestCase(TestCase):
         self.check.refresh_from_db()
         assert self.check.status == "often"
         
-
+    # test if status changes from 'down' to 'up' for an overdue check
+    def test_down_to_up_status(self):
+        now = datetime.datetime.now()
+        self.check.last_ping = now - datetime.timedelta(days=3)
+        self.check.save()
+        
+        r = self.client.get("/ping/%s/" % self.check.code)
+        self.check.refresh_from_db()
+        assert self.check.status == "up"
+        assert r.status_code == 200
+        
     def test_it_handles_bad_uuid(self):
         r = self.client.get("/ping/not-uuid/")
         assert r.status_code == 400
