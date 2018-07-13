@@ -17,7 +17,8 @@ STATUSES = (
     ("up", "Up"),
     ("down", "Down"),
     ("new", "New"),
-    ("paused", "Paused")
+    ("paused", "Paused"),
+    ("nag", "Nag")
 )
 DEFAULT_TIMEOUT = td(days=1)
 DEFAULT_GRACE = td(hours=1)
@@ -52,6 +53,9 @@ class Check(models.Model):
     last_ping = models.DateTimeField(null=True, blank=True)
     alert_after = models.DateTimeField(null=True, blank=True, editable=False)
     status = models.CharField(max_length=6, choices=STATUSES, default="new")
+    nag_after = models.DateTimeField(null=True, blank=True)
+    nag_status = models.BooleanField(default=False)
+    new_nag_after = models.DurationField(default=DEFAULT_GRACE+DEFAULT_TIMEOUT)
 
     def name_then_code(self):
         if self.name:
@@ -129,6 +133,11 @@ class Check(models.Model):
             result["next_ping"] = None
 
         return result
+
+    def nag(self):
+        """Sends a nag to the client if the service is still down"""
+        if self.get_status() == 'down' and self.nag_status:
+            return "nag"
 
 
 class Ping(models.Model):
