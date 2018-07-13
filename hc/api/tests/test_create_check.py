@@ -116,7 +116,7 @@ class CreateCheckTestCase(BaseTestCase):
             "api_key": "abc",
             "name": "dbbackup",
             "tags": "cronjob,db",
-            "timeout": 40,
+            "timeout": 50,
             "grace": 120
         })
         self.assertEqual(400,response.status_code)
@@ -128,7 +128,7 @@ class CreateCheckTestCase(BaseTestCase):
             "api_key": "abc",
             "name": "Foo",
             "tags": "bar,baz",
-            "timeout": 700000,
+            "timeout": 16000000,
             "grace": 60
         })
         self.assertEqual(r.status_code, 400)
