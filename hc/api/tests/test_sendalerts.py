@@ -31,7 +31,7 @@ class SendAlertsTestCase(BaseTestCase):
 
 
     def test_it_handles_grace_period(self):
-        check = Check(user=self.alice, status="up", nag_status=True)
+        check = Check(user=self.alice, status="up")
         # 1 day 30 minutes after ping the check is in grace period:
         check.last_ping = timezone.now() - timedelta(days=1, minutes=30)
         check.save()
@@ -52,9 +52,10 @@ class SendAlertsTestCase(BaseTestCase):
             check = Check(user=self.bob, name=name)
             check.alert_after = time
             check.status = "up"
+            check.nag_status=True
             check.save()
         result = Command().handle_many()
         self.assertEqual(result, True, "handle_many should return True")
 
+    
         
-
