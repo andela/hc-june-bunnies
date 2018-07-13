@@ -92,6 +92,34 @@ $(function () {
         $("#update-timeout-grace").val(rounded);
     });
 
+    var nagSlider = document.getElementById("nag-slider");
+    noUiSlider.create(nagSlider, {
+        start: [20],
+        connect: "lower",
+        range: {
+            'min': [60, 60],
+            '33%': [3600, 3600],
+            '66%': [86400, 86400],
+            '83%': [604800, 604800],
+            'max': 2592000,
+        },
+        pips: {
+            mode: 'values',
+            values: [60, 1800, 3600, 43200, 86400, 604800, 2592000],
+            density: 4,
+            format: {
+                to: secsToText,
+                from: function() {}
+            }
+        }
+    });
+
+    nagSlider.noUiSlider.on("update", function(a, b, value) {
+        var rounded = Math.round(value);
+        $("#nag-slider-value").text(secsToText(rounded));
+        $("#update-timeout-nag").val(rounded);
+    });
+
 
     $('[data-toggle="tooltip"]').tooltip();
 
@@ -201,6 +229,17 @@ $(function () {
     clipboard.on('error', function(e) {
         var text = e.trigger.getAttribute("data-clipboard-text");
         prompt("Press Ctrl+C to select:", text)
+    });
+
+    $(".update-nag").click(function() {
+        var $this = $(this);
+
+        $("#update-nag-form").attr("action", $this.data("url"));
+        $("#update-nag-input").val($this.data("nag"));
+        $('#update-nag-modal').modal("show");
+        $("#update-nag-input").focus();
+
+        return false;
     });
 
 

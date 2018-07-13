@@ -6,9 +6,11 @@
         <th>Ping URL</th>
         <th class="th-period">
             Period <br />
-            <span class="checks-subline">Grace</span>
+            <span class="checks-subline">Grace</span><br/>
+            Nag Interval
         </th>
         <th>Last Ping</th>
+        <th>Nag Status</th>
         <th></th>
     </tr>
     {% for check in checks %}
@@ -54,11 +56,16 @@
                 data-url="{% url 'hc-update-timeout' check.code %}"
                 data-timeout="{{ check.timeout.total_seconds }}"
                 data-grace="{{ check.grace.total_seconds }}"
+                data-nag="{{ check.new_nag_after.total_seconds }}"
                 class="timeout-grace">
                 {{ check.timeout|hc_duration }}
                 <br />
                 <span class="checks-subline">
                 {{ check.grace|hc_duration }}
+                </span>
+                <br />
+                <span class="timeout-nag">
+                {{ check.new_nag_after|hc_duration }}
                 </span>
             </span>
         </td>
@@ -72,6 +79,24 @@
         {% else %}
             Never
         {% endif %}
+        </td>
+        <td>
+            {% if check.nag_after > check.alert_after and check.nag_status == True %}
+                <button
+                    data-nag="{{ check.nag_status }}"
+                    data-url="{% url 'hc-update-nag' check.code %}"
+                    class="btn btn-danger update-nag">NAGGING!</button>
+            {% elif check.nag_status == True %}
+                <button
+                    data-nag="{{ check.nag_status }}"
+                    data-url="{% url 'hc-update-nag' check.code %}"
+                    class="btn btn-info update-nag">Nag On</button>
+            {% else %}
+                <button
+                    data-nag="{{ check.nag_status }}"
+                    data-url="{% url 'hc-update-nag' check.code %}"
+                    class="btn btn-default update-nag">Nag Off</button>
+            {% endif %}  
         </td>
         <td>
             <div class="check-menu dropdown">

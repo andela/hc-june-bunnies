@@ -84,6 +84,26 @@
                 data-grace="{{ check.grace.total_seconds }}"
                 class="btn btn-default timeout-grace">Change Period</a>
 
+                {% if check.nag_after > check.alert_after and check.nag_status == True %}
+                <a
+                    href="#"
+                    data-nag="{{ check.nag_status }}"
+                    data-url="{% url 'hc-update-nag' check.code %}"
+                    class="btn btn-danger update-nag">NAGGING!</a>
+                {% elif check.nag_status == True %}
+                <a
+                    href="#"
+                    data-nag="{{ check.nag_status }}"
+                    data-url="{% url 'hc-update-nag' check.code %}"
+                    class="btn btn-info update-nag">Nag ON</a>
+                {% else %}
+                <a
+                    href="#"
+                    data-nag="{{ check.nag_status }}"
+                    data-url="{% url 'hc-update-nag' check.code %}"
+                    class="btn btn-default update-nag">Nag OFF</a>
+                {% endif %}
+
             <a href="{% url 'hc-log' check.code %}" class="btn btn-default">Log</a>
         </div>
 

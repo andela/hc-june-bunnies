@@ -15,9 +15,9 @@ from django.utils.crypto import get_random_string
 from django.utils.six.moves.urllib.parse import urlencode
 from hc.api.decorators import uuid_or_400
 from hc.api.models import DEFAULT_GRACE, DEFAULT_TIMEOUT, Channel, Check, Ping
-from hc.front.forms import (AddChannelForm, AddWebhookForm, NameTagsForm,
-                            TimeoutForm)
+from hc.front.forms import (AddChannelForm, AddWebhookForm, NameTagsForm,TimeoutForm, NagUserForm)
 from hc.accounts.models import Member
+
 
 # from itertools recipes:
 def pairwise(iterable):
@@ -173,6 +173,7 @@ def update_timeout(request, code):
     if form.is_valid():
         check.timeout = td(seconds=form.cleaned_data["timeout"])
         check.grace = td(seconds=form.cleaned_data["grace"])
+        check.new_nag_after = td(seconds=form.cleaned_data["new_nag_after"])
         check.save()
 
     return redirect("hc-checks")
@@ -575,3 +576,21 @@ def privacy(request):
 
 def terms(request):
     return render(request, "front/terms.html", {})
+
+
+@login_required
+@uuid_or_400
+def nag_user(request, code):
+    """Function for updating the nag option"""
+    assert request.method == "POST"
+
+    check = get_object_or_404(Check, code=code)
+    if check.user_id != request.team.user.id:
+        return HttpResponseForbidden()
+
+    form = NagUserForm(request.POST)
+    if form.is_valid():
+        check.nag_status = form.cleaned_data["nag"]
+        check.save()
+
+    return redirect("hc-checks")
