@@ -158,6 +158,7 @@ def profile(request):
             if form.is_valid():
                 profile.reports_allowed = form.cleaned_data["reports_allowed"]
                 profile.save()
+                profile.send_report()
                 messages.success(request, "Your settings have been updated!")
         elif "invite_team_member" in request.POST:
             if not profile.team_access_allowed:
@@ -165,14 +166,20 @@ def profile(request):
 
             form = InviteTeamMemberForm(request.POST)
             if form.is_valid():
-
+                #  get email and check to add to
                 email = form.cleaned_data["email"]
+                check_name = form.cleaned_data["check"]
                 try:
                     user = User.objects.get(email=email)
                 except User.DoesNotExist:
                     user = _make_user(email)
-
-                profile.invite(user)
+                try:
+                    check = Check.objects.get(name=check_name, user=request.team.user)
+                except Exception:
+                    messages.warning(request, "Check named %s not found!" % check_name)
+                    return redirect("hc-profile")
+                
+                profile.invite(user, check=check)
                 messages.success(request, "Invitation to %s sent!" % email)
         elif "remove_team_member" in request.POST:
             form = RemoveTeamMemberForm(request.POST)
