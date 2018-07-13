@@ -14,9 +14,13 @@ class HcExtrasTestCase(TestCase):
             (86400, "1 day"),
             (604800, "1 week"),
             (2419200, "4 weeks"),
-            (2592000, "30 days"),
-            (3801600, "44 days")
+            (2592000, "1 month"),
+            (3196800, "1 month 1 week"),
+            (7776000, "3 months"),
+            (8985600, "3 months 2 weeks"),
+            (15552000, "6 months")
         ]
+        """Include different samples that allow for the extended timeout and grace period of 6 months """
 
         for seconds, expected_result in samples:
             result = hc_duration(td(seconds=seconds))
