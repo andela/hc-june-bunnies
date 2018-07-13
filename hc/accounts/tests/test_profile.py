@@ -24,12 +24,12 @@ class ProfileTestCase(BaseTestCase):
         self.alice.profile.refresh_from_db()
         token = self.alice.profile.token
         # Assert that the token is set
+
         self.assertTrue(token)
 
         # Assert that the email was sent and check email content
         self.assertEqual(len(mail.outbox), 1)
         self.assertEqual(mail.outbox[0].subject, 'Set password on healthchecks.io')
- 
  
 
     def test_it_sends_report(self):
@@ -37,11 +37,9 @@ class ProfileTestCase(BaseTestCase):
         check.save()
 
         self.alice.profile.send_report()
-
         # Assert that the email was sent and check email content
         self.assertEqual(len(mail.outbox), 1)
         self.assertEqual(mail.outbox[0].subject, 'Monthly Report')
-
 
     def test_it_adds_team_member(self):
         self.client.login(username="alice@example.org", password="password")
@@ -57,11 +55,11 @@ class ProfileTestCase(BaseTestCase):
 
         # Assert the existence of the member emails
         self.assertTrue("frank@example.org" in member_emails)
+        self.assertTrue("bob@example.org" in member_emails)
 
         # Assert that the email was sent and check email content
         self.assertEqual(len(mail.outbox), 1)
         self.assertEqual(mail.outbox[0].subject, 'You have been invited to join alice@example.org on healthchecks.io')
-
 
     def test_add_team_member_checks_team_access_allowed_flag(self):
         self.client.login(username="charlie@example.org", password="password")
@@ -124,4 +122,28 @@ class ProfileTestCase(BaseTestCase):
         # Expect only Alice's tags
         self.assertNotContains(r, "bobs-tag.svg")
 
-    ### Test it creates and revokes API key
+    def test_it_creates_and_revokes_api_key(self):
+        """ Check user can create an API key and revoke it."""
+        self.client.login(username="bob@example.org", password="password")
+
+        # test that the api key is not there
+        api_key = self.bob.profile.api_key
+        self.assertEquals(api_key, "")
+
+        # create the api key
+        form = {"create_api_key": "1"}
+        self.client.post("/accounts/profile/", form)
+
+        # api key should now be set
+        self.bob.profile.refresh_from_db()
+        api_key = self.bob.profile.api_key
+        assert api_key
+
+        # revoke api key
+        form = {"revoke_api_key": "1"}
+        self.client.post("/accounts/profile/", form)
+
+        # test that the api key has been revoked
+        self.bob.profile.refresh_from_db()
+        api_key = self.bob.profile.api_key
+        self.assertEquals(api_key, "")

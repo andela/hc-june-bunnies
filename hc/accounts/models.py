@@ -20,7 +20,7 @@ class Profile(models.Model):
     team_name = models.CharField(max_length=200, blank=True)
     team_access_allowed = models.BooleanField(default=False)
     next_report_date = models.DateTimeField(null=True, blank=True)
-    reports_allowed = models.BooleanField(default=True)
+    reports_allowed = models.CharField(max_length=20, default="monthly")
     ping_log_limit = models.IntegerField(default=100)
     token = models.CharField(max_length=128, blank=True)
     api_key = models.CharField(max_length=128, blank=True)
@@ -57,8 +57,11 @@ class Profile(models.Model):
 
     def send_report(self):
         # reset next report date first:
+        
+        frequency = { "daily":1, "weekly":7, "monthly":30}  # create a dictionary to store frequencies
+        days = frequency[self.reports_allowed.lower()]
         now = timezone.now()
-        self.next_report_date = now + timedelta(days=30)
+        self.next_report_date = now + timedelta(days=days)
         self.save()
 
         token = signing.Signer().sign(uuid.uuid4())
@@ -68,6 +71,7 @@ class Profile(models.Model):
         ctx = {
             "checks": self.user.check_set.order_by("created"),
             "now": now,
+            "frequency": self.reports_allowed,
             "unsub_link": unsub_link
         }
 
