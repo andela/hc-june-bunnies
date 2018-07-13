@@ -186,8 +186,11 @@ def profile(request):
             if form.is_valid():
 
                 email = form.cleaned_data["email"]
+                check = form.cleaned_data["check"]
                 farewell_user = User.objects.get(email=email)
                 farewell_user.profile.current_team = None
+                farewell_user_channel = Channel.objects.filter(email=email)
+                farewell_user_channel.checks.remove(check)
                 farewell_user.profile.save()
 
                 Member.objects.filter(team=profile,
