@@ -27,9 +27,9 @@ class ChecksAdmin(admin.ModelAdmin):
             'all': ('css/admin/checks.css',)
         }
 
-    search_fields = ["name", "user__email", "code"]
+    search_fields = ["name", "user__email", "code", "department", "critical"]
     list_display = ("id", "name_tags", "created", "code", "status", "email",
-                    "last_ping", "n_pings")
+                    "last_ping", "n_pings", "critical", "department")
     list_select_related = ("user", )
     list_filter = ("status", OwnershipListFilter, "last_ping")
     actions = ["send_alert"]
