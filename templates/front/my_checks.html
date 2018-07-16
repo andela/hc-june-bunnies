@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load compress staticfiles %}
+{% load hc_extras %}
 
 {% block title %}My Checks - healthchecks.io{% endblock %}
 
@@ -7,13 +8,21 @@
 {% block content %}
 <div class="row">
     <div class="col-sm-12">
-        <h1>
-        {% if request.team == request.user.profile %}
-            My Checks
-        {% else %}
-            {{ request.team.team_name }}
-        {% endif %}
-        </h1>
+        <ul class="nav nav-tabs">
+            <li class="active">
+                <a href="#">
+                    <h1>
+                        {% if request.team == request.user.profile %}
+                            My Checks
+                        {% else %}
+                            {{ request.team.team_name }}
+                        {% endif %}
+                    </h1>                   
+                </a></li>
+            <li><a href="#" data-target="#checks-by-department" data-toggle="modal"><h1>By Department</h1></a></li>
+            
+            
+        </ul>
     </div>
     {% if tags %}
     <div id="my-checks-tags" class="col-sm-12">
@@ -32,10 +41,7 @@
 </div>
 <div class="row">
     <div class="col-sm-12">
-
-
     {% if checks %}
-
         {% include "front/my_checks_mobile.html" %}
         {% include "front/my_checks_desktop.html" %}
     {% else %}
@@ -50,6 +56,30 @@
             <input type="submit" class="btn btn-primary btn-lg" value="Add Check">
         </form>
     </div>
+</div>
+
+<div id="checks-by-department" class="modal" role="dialog">
+    <div class="modal-dialog">
+    
+        <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal">&times;</button>
+              <h1 class="modal-title">Checks by Departments</h1>
+            </div>
+            <div class="modal-body">
+
+                {% for department in departments%}
+                    <span><h3>{{ department }}</h3></span>
+                    {% include "front/my_checks_mobile.html" with checks=departments|get_item:department %}
+                    {% include "front/my_checks_desktop.html" with checks=departments|get_item:department %}
+                {% endfor %}
+
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>     
 </div>
 
 <div id="update-name-modal" class="modal">
