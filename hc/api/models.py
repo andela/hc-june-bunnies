@@ -56,7 +56,7 @@ class Check(models.Model):
     nag_after = models.DateTimeField(null=True, blank=True)
     nag_status = models.BooleanField(default=False)
     new_nag_after = models.DurationField(default=DEFAULT_GRACE+DEFAULT_TIMEOUT)
-    department = models.CharField(max_length=30, blank=True)
+    department = models.CharField(max_length=30, default="Unknown")
     critical = models.BooleanField(default=False)
 
     def name_then_code(self):
