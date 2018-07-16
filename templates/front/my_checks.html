@@ -35,6 +35,7 @@
 
 
     {% if checks %}
+
         {% include "front/my_checks_mobile.html" %}
         {% include "front/my_checks_desktop.html" %}
     {% else %}
@@ -62,6 +63,7 @@
                 </div>
                 <div class="modal-body">
                         <div class="form-group">
+
                             <label for="update-name-input" class="col-sm-2 control-label">
                                 Name
                             </label>
@@ -100,6 +102,44 @@
                                 </span>
                             </div>
                         </div>
+
+                        <div class="form-group">
+                            <label for="update-department-input" class="col-sm-2 control-label">
+                                Department
+                            </label>
+                            <div class="col-sm-9">
+                                <input
+                                    id="update-department-input"
+                                    name="department"
+                                    type="text"
+                                    value=""
+                                    placeholder="Finance"
+                                    class="form-control" />
+
+                                <span class="help-block">
+                                    Optionally, assign check a department.
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="update-critical-input" class="col-sm-2 control-label">
+                                Critical?
+                            </label>
+                            <div class="col-sm-9">
+                                <input
+                                    id="update-department-input"
+                                    name="critical"
+                                    type="checkbox"
+                                    value="True"
+                                    class="form-control" />
+
+                                <span class="help-block">
+                                    Tick checkbox if the check is critical to business processes.
+                                </span>
+                            </div>
+                        </div>
+
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
