@@ -33,3 +33,7 @@ def hc_duration(td):
             result.append("%d %s" % (v, unit.plural))
 
     return " ".join(result)
+
+@register.filter
+def get_item(dictionary, key):
+    return dictionary.get(key)
