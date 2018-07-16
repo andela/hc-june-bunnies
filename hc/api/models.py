@@ -56,6 +56,8 @@ class Check(models.Model):
     nag_after = models.DateTimeField(null=True, blank=True)
     nag_status = models.BooleanField(default=False)
     new_nag_after = models.DurationField(default=DEFAULT_GRACE+DEFAULT_TIMEOUT)
+    department = models.CharField(max_length=30, blank=True)
+    critical = models.BooleanField(default=False)
 
     def name_then_code(self):
         if self.name:
@@ -75,7 +77,6 @@ class Check(models.Model):
     def send_alert(self):
         if self.status not in ("up", "down"):
             raise NotImplementedError("Unexpected status: %s" % self.status)
-
         errors = []
         for channel in self.channel_set.all():
             error = channel.notify(self)
