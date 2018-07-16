@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load compress staticfiles %}
+{% load hc_extras %}
 
 {% block title %}My Checks - healthchecks.io{% endblock %}
 
@@ -7,14 +8,26 @@
 {% block content %}
 <div class="row">
     <div class="col-sm-12">
-        <h1>
-        {% if request.team == request.user.profile %}
-            My Checks
-        {% else %}
-            {{ request.team.team_name }}
-        {% endif %}
-        </h1>
+        <ul class="nav nav-tabs">
+            <li class="active">
+                <a href="#allchecks" aria-controls="allchecks" role="tab" data-toggle="tab">
+                    <h1>
+                        {% if request.team == request.user.profile %}
+                            My Checks
+                        {% else %}
+                            {{ request.team.team_name }}
+                        {% endif %}
+                    </h1>                   
+                </a>
+            </li>
+            <li>
+                <a href="#checks-by-department" aria-controls="checks-by-department" role="tab" data-toggle="tab">
+                    <h1>By Department</h1>
+                </a>
+            </li>    
+        </ul>
     </div>
+
     {% if tags %}
     <div id="my-checks-tags" class="col-sm-12">
         {% for tag, count in tags %}
@@ -30,19 +43,28 @@
     {% endif %}
 
 </div>
-<div class="row">
-    <div class="col-sm-12">
-
-
-    {% if checks %}
-
-        {% include "front/my_checks_mobile.html" %}
-        {% include "front/my_checks_desktop.html" %}
-    {% else %}
-    <div class="alert alert-info">You don't have any checks yet.</div>
-    {% endif %}
+<div class="tab-content">
+    <div class="row" id="allchecks" class="tab-pane active">
+        <div class="col-sm-12">
+        {% if checks %}
+            {% include "front/my_checks_mobile.html" %}
+            {% include "front/my_checks_desktop.html" %}
+        {% else %}
+        <div class="alert alert-info">You don't have any checks yet.</div>
+        {% endif %}
+        </div>
     </div>
-</div>
+
+    <div id="checks-by-department" class="tab-pane">
+            {% for department in departments%}
+                <span><h3><strong>Department: {{ department }}</strong></h3></span>
+                {% include "front/my_checks_mobile.html" with checks=departments|get_item:department %}
+                {% include "front/my_checks_desktop.html" with checks=departments|get_item:department %}
+            {% endfor %}
+    </div>
+</div> 
+
+
 <div class="row">
     <div class="col-sm-12">
         <form method="post" action="{% url 'hc-add-check' %}" class="text-center">
@@ -51,6 +73,9 @@
         </form>
     </div>
 </div>
+
+
+
 
 <div id="update-name-modal" class="modal">
     <div class="modal-dialog">
