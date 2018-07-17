@@ -7,16 +7,19 @@
 }
 
 #low {
-    background-color: darkcyan;
-    border-radius: 12px;
+    background-color: rgb(50, 235, 121);
+    border-radius: 5px;
+    color: white
 }
 #normal {
-    background-color: darkgoldenrod;
-    border-radius: 12px;
+    background-color: rgb(204, 128, 194);
+    border-radius: 5px;
+    color: white
 }
 #high {
-    background-color: chartreuse;
-    border-radius: 12px;
+    background-color: #B71C1C !important;
+    border-radius: 5px;
+    color: white
 }
 .my-checks-name.unnamed {
     color: #999;
