@@ -5,6 +5,7 @@ from hc.api.models import Channel
 class NameTagsForm(forms.Form):
     name = forms.CharField(max_length=100, required=False)
     tags = forms.CharField(max_length=500, required=False)
+    priority = forms.IntegerField(required=False)
 
     def clean_tags(self):
         l = []
