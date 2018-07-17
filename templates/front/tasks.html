@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+
+{% load staticfiles %}
+
+{% block title %}Schedule Tasks - healthchecks.io{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-sm-12">
+       <h1 class="tasks-title">Scheduled Tasks</h1>
+   </div>
+   {% if messages %}
+   <div class="col-sm-12">
+       {% for message in messages %}
+       <p class="alert alert-{{ message.tags }}">{{ message }}</p>
+       {% endfor %}
+   </div>
+   {% endif %}
+ </div>
+ <div class="row">
+       <div class="col-sm-6">
+           <div class="panel panel-default">
+                 <div class="panel-body settings-block">
+                      <h1>Email</h1>
+                      <p>Send an email:-</p>
+                      <form method="post" id="send-email-task-form" action="{% url 'hc-send-email' %}" >
+                             {% csrf_token %}
+                             <div class="form-group">
+                                <label
+                                  for="formGroupRecipientEmail">Recipient Email
+                                </label>
+                                    <input
+                                    type="email"
+                                    class="form-control"
+                                    id="recipient-email"
+                                    name="recipient_email"
+                                    placeholder="someone@example.com" required>
+                                </div>
+                                <div class="form-group">
+                                <label
+                                for="formGroupEmailSubject">Email Subject
+                                </label>
+                                 <input
+                                  type="text"
+                                  class="form-control"
+                                  id="email-subject"
+                                  name="email_subject"
+                                  placeholder="Email title" required>
+                                </div>
+                                <div class="form-group">
+                                     <label
+                                     for="formGroupEmailBody">Email Body
+                                     </label>
+                                     <textarea 
+                                     id="email-body"
+                                     name="email_body">
+                                    </textarea>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col-sm-12">
+                                        <button
+                                        class="btn btn-default pull-right"
+                                        type="submit"
+                                        name="send-email">
+                                        Send
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+<style>
+.panel-default > .panel-heading {
+     background-color: #eee !important;
+     color: #fff;}
+      </style>
+      {% endblock %}
+      {% block scripts %}
+      <script src="{% static 'js/jquery-2.1.4.min.js' %}"></script>
+      <script src="{% static 'js/bootstrap.min.js' %}"></script>
+      <script src="http://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.9/summernote.js"></script>
+      <script>
+      $(document).ready(function(){
+          $('#email-body').summernote({
+              toolbar: [
+                  ['style', ['bold', 'italic', 'underline', 'clear']],
+                  ['font', ['strikethrough', 'superscript', 'subscript']],
+                  ['fontsize', ['fontsize']],
+                  ['color', ['color']],
+                  ['para', ['ul', 'ol', 'paragraph']],
+                  ['height', ['height']]
+                ]
+            });
+        });
+        </script>
+        {% endblock %}
