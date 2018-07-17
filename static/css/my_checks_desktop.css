@@ -8,12 +8,15 @@
 
 #low {
     background-color: darkcyan;
+    border-radius: 12px;
 }
 #normal {
     background-color: darkgoldenrod;
+    border-radius: 12px;
 }
 #high {
-    background-color: chartreuse
+    background-color: chartreuse;
+    border-radius: 12px;
 }
 .my-checks-name.unnamed {
     color: #999;
