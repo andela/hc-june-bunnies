@@ -39,7 +39,7 @@ def my_checks(request):
         checks.extend(Check.objects.filter(user=request.user).all())
         
     else:
-        q = Check.objects.filter(user=request.team.user).order_by("created")
+        q = Check.objects.filter(user=request.team.user).order_by("priority").reverse()
         checks =list(q)
     down_checks =[]
     counter = Counter()
