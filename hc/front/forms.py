@@ -46,3 +46,8 @@ class AddWebhookForm(forms.Form):
 class NagUserForm(forms.Form):
     """Form for nagging the user"""
     nag = forms.BooleanField(required=False)
+
+class EmailTaskForm(forms.Form):
+    recipient_email = forms.EmailField(required=True)
+    email_subject = forms.CharField(required=True)
+    email_body= forms.CharField(required=False)
