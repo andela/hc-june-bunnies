@@ -15,9 +15,9 @@ from django.utils.crypto import get_random_string
 from django.utils.six.moves.urllib.parse import urlencode
 from hc.api.decorators import uuid_or_400
 from hc.api.models import DEFAULT_GRACE, DEFAULT_TIMEOUT, Channel, Check, Ping
-from hc.front.forms import (AddChannelForm, AddWebhookForm, NameTagsForm,TimeoutForm, NagUserForm)
+from hc.front.forms import (AddChannelForm, AddWebhookForm, NameTagsForm,TimeoutForm,EmailTaskForm,NagUserForm)
 from hc.accounts.models import Member
-
+from hc.lib import emails
 
 # from itertools recipes:
 def pairwise(iterable):
@@ -39,7 +39,7 @@ def my_checks(request):
         checks.extend(Check.objects.filter(user=request.user).all())
         
     else:
-        q = Check.objects.filter(user=request.team.user).order_by("created")
+        q = Check.objects.filter(user=request.user).order_by("created")
         checks =list(q)
     
     counter = Counter()
@@ -129,6 +129,35 @@ def docs_api(request):
 def about(request):
     return render(request, "front/about.html", {"page": "about"})
 
+def tasks(request):
+    print(request.user)
+    q = Check.objects.filter(user=request.user).order_by("name").reverse()
+    checks = list(q)
+    ctx = {
+        "checks":checks
+    }
+    return render(request, "front/tasks.html",  ctx)
+
+@login_required
+def send_email(request):
+    assert request.method == "POST"
+    profile = request.user.profile
+    form = EmailTaskForm(request.POST)
+    if form.is_valid():
+        recipient = form.cleaned_data['recipient_email']
+        subject = form.cleaned_data['email_subject']
+        body= form.cleaned_data['email_body']
+        ctx = {
+             "username": profile.user.username,
+             "email": profile.user.email,
+             "subject":subject,
+             "body":body
+            }
+        print (ctx)
+        emails.send_task(recipient, ctx)
+        messages.success(request, "Email sent")
+    return redirect("hc-tasks")
+
 
 @login_required
 def add_check(request):
@@ -140,7 +169,6 @@ def add_check(request):
     check.assign_all_channels()
 
     return redirect("hc-checks")
-
 
 @login_required
 @uuid_or_400
