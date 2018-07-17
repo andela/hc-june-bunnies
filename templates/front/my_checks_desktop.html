@@ -9,6 +9,7 @@
             <span class="checks-subline">Grace</span><br/>
             Nag Interval
         </th>
+        <th>Priority</th>
         <th>Last Ping</th>
         <th>Nag Status</th>
         <th></th>
@@ -69,6 +70,14 @@
                 </span>
             </span>
         </td>
+        <td>
+            {% if check.priority == 0 %}
+                <button id="low">Low</button>
+            {% elif check.priority == 1 %}
+                <button id="normal">Normal</button>
+            {% else %}
+                <button id="high">High</button>
+            {% endif %}
         <td>
         {% if check.last_ping %}
             <span
