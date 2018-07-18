@@ -10,6 +10,7 @@ from django.core import signing
 from django.db import models
 from django.urls import reverse
 from django.utils import timezone
+import datetime
 from hc.lib import emails
 from hc.api.models import Check, Channel
 
@@ -25,7 +26,7 @@ class Profile(models.Model):
     token = models.CharField(max_length=128, blank=True)
     api_key = models.CharField(max_length=128, blank=True)
     current_team = models.ForeignKey("self", null=True)
-    
+
 
     def __str__(self):
         return self.team_name or self.user.email
@@ -102,3 +103,12 @@ class Member(models.Model):
     team = models.ForeignKey(Profile)
     user = models.ForeignKey(User)
     check_assigned = models.ManyToManyField(Check)
+
+class Task (models.Model):
+    schedule = models.CharField(max_length=100, default="* * * * *")
+    time_created = models.DateTimeField(auto_now_add=True)
+    task_scheduler=models.ForeignKey(User)
+    subject = models.CharField(max_length=1000, blank=True)
+    body = models.CharField(max_length=30, blank=True)
+
+    
