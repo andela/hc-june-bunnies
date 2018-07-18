@@ -15,6 +15,11 @@ class Category(models.Model):
 		return self.name
 
 
+class PublishedManager(models.Manager):
+	'''custom manager to get published blogs'''
+	def get_queryset(self):
+		return super(PublishedManager,self).get_queryset().filter(status='published')
+
 
 class Blog(models.Model):
 	title = models.CharField(max_length=100, unique=True, default='Title')
@@ -26,6 +31,8 @@ class Blog(models.Model):
 	updated = models.DateTimeField(auto_now=True)
 	categories = models.ManyToManyField(Category)
 	status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='draft')
+	
+	published = PublishedManager()
 
 	class Meta:
 		ordering = ('-published_on',)
