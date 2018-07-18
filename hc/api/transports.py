@@ -75,7 +75,7 @@ class Sms(Transport):
         message = client.messages.create(
             to="+254703337420", 
             from_="+12398429227",
-            body="Hello from Python!")
+            body="Hello from Health-Checks," + " " + check.name + " " + "has gone" + " " + check.status)
 
         message.sid
 
