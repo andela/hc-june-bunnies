@@ -16,7 +16,7 @@ from django.utils.six.moves.urllib.parse import urlencode
 from hc.api.decorators import uuid_or_400
 from hc.api.models import DEFAULT_GRACE, DEFAULT_TIMEOUT, Channel, Check, Ping
 from hc.front.forms import (AddChannelForm, AddWebhookForm, NameTagsForm,TimeoutForm,EmailTaskForm,NagUserForm)
-from hc.accounts.models import Member
+from hc.accounts.models import Member, Task
 from hc.lib import emails
 
 # from itertools recipes:
@@ -144,18 +144,23 @@ def send_email(request):
     profile = request.user.profile
     form = EmailTaskForm(request.POST)
     if form.is_valid():
-        recipient = form.cleaned_data['recipient_email']
+        task = Task(task_scheduler=request.user)
         subject = form.cleaned_data['email_subject']
         body= form.cleaned_data['email_body']
+        scheduledTime= form.cleaned_data['schedule']
+        print(scheduledTime)
+        task.subject = subject
+        task.body = body
+        task.schedule = scheduledTime
+        task.save()
         ctx = {
              "username": profile.user.username,
              "email": profile.user.email,
              "subject":subject,
              "body":body
-            }
-        print (ctx)
-        emails.send_task(recipient, ctx)
-        messages.success(request, "Email sent")
+        }
+        # emails.send_task(recipient, ctx)
+        messages.success(request, "Your task was successfully scheduled")
     return redirect("hc-tasks")
 
 
