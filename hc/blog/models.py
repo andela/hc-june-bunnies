@@ -40,4 +40,9 @@ class Blog(models.Model):
 	def __str__(self):
 		return self.title
 
+	def get_absolute_url(self):
+		'''get an absolute url pointing to a blog post'''
+        return reverse(
+        	'blog:hc-blog-detail',
+        	args=[self.published_on.year, self.published_on.strftime('%m'), self.published_on.strftime('%d'), self.slug])
 
