@@ -4,6 +4,8 @@ from django.utils import timezone
 import json
 import requests
 from six.moves.urllib.parse import quote
+from twilio.rest import Client
+
 
 from hc.lib import emails
 
@@ -58,6 +60,25 @@ class Email(Transport):
             "show_upgrade_note": show_upgrade_note
         }
         emails.alert(self.channel.value, ctx)
+
+
+# sends SMS notification when status of check changes
+class Sms(Transport):
+    def notify(self, check):
+        # Your Account SID from twilio.com/console
+        account_sid = "ACecb9b75e1e81e1db87af558693b68a1f"
+        # Your Auth Token from twilio.com/console
+        auth_token  = "fbbf2f6e7b45a4a13b99bafa1db57d54"
+
+        client = Client(account_sid, auth_token)
+
+        message = client.messages.create(
+            to="+254703337420", 
+            from_="+12398429227",
+            body="Hello from Python!")
+
+        message.sid
+
 
 
 class HttpTransport(Transport):

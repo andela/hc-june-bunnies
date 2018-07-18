@@ -24,7 +24,7 @@
 
     <form method="post" class="form-horizontal" action="{% url 'hc-add-channel' %}">
         {% csrf_token %}
-        <input type="hidden" name="kind" value="email" />
+        <input type="hidden" name="kind" value="sms" />
         <div class="form-group">
             <label for="phone_num" class="col-sm-2 control-label">Phone number</label>
             <div class="col-sm-3">
