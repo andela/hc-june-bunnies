@@ -1,6 +1,7 @@
 from django.db import models
 from hc.accounts.models import User
 from django.utils import timezone
+from django.urls import reverse
 
 
 STATUS_CHOICES = (
@@ -42,7 +43,7 @@ class Blog(models.Model):
 
 	def get_absolute_url(self):
 		'''get an absolute url pointing to a blog post'''
-        return reverse(
-        	'blog:hc-blog-detail',
+		return reverse(
+        	'hc-blog-detail',
         	args=[self.published_on.year, self.published_on.strftime('%m'), self.published_on.strftime('%d'), self.slug])
 

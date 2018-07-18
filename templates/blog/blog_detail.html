@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% load compress staticfiles %}
+
+{% block title %}
+Blogs - healthchecks.io
+
+{% endblock %}
+
+
+{% block content %}
+
+	<h2>{{ blog.title }}</h2>
+    <p class="small">Published {{ blog.publish_on }} by {{ blog.author }}</p>
+    <p>{{ blog.body|linebreaks }}</p>
+
+{% endblock %}

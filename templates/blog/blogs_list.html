@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% load compress staticfiles %}
+
+{% block title %}Blogs - healthchecks.io{% endblock %}
+
+
+{% block content %}
+
+	<h2 class="page-header">Recents Posts</h2>
+    {% for blog in blogs %}
+       <h3><a href="{{ blog.get_absolute_url }}">{{ blog.title }}</a></h3>
+        <p class="small">Published {{ blog.publish_on }} by {{ blog.author }}</p>
+        <p>{{ blog.body|truncatewords:25|linebreaks }}</p>
+    {% endfor %}
+
+{% endblock %}

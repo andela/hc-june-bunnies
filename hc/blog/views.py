@@ -11,11 +11,11 @@ def blogs_list(request):
 	ctx = {
 		'blogs': published_blogs
 	}
-	return render(request, "blog/blogs_list", ctx)
+	return render(request, "blog/blogs_list.html", ctx)
 
 
 @login_required
 def blog_detail(request, year, month, day, slug):
-	blog = get_object_or_404(Blog, slug=slug, status='published', publish__year=year, publish__month=month, publish__day=day)
+	blog = get_object_or_404(Blog, slug=slug, status='published', published_on__year=year, published_on__month=month, published_on__day=day)
 	ctx = {'blog': blog}
-    return render(request, 'blog/blog_detail.html', ctx)
+	return render(request, 'blog/blog_detail.html', ctx)
