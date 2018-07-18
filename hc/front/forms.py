@@ -48,6 +48,6 @@ class NagUserForm(forms.Form):
     nag = forms.BooleanField(required=False)
 
 class EmailTaskForm(forms.Form):
-    recipient_email = forms.EmailField(required=True)
     email_subject = forms.CharField(required=True)
-    email_body= forms.CharField(required=False)
+    email_body = forms.CharField(required=False)
+    schedule = forms.CharField(required=True)
