@@ -5,40 +5,27 @@
 {% block title %}Schedule Tasks - healthchecks.io{% endblock %}
 
 {% block content %}
-<div class="row">
-    <div class="col-sm-12">
-       <h1 class="tasks-title">Scheduled Tasks</h1>
-   </div>
-   {% if messages %}
-   <div class="col-sm-12">
-       {% for message in messages %}
-       <p class="alert alert-{{ message.tags }}">{{ message }}</p>
-       {% endfor %}
-   </div>
-   {% endif %}
- </div>
  <div class="row">
-       <div class="col-sm-6">
-           <div class="panel panel-default">
+    <div class="col-sm-6">
+            <h1 class="tasks-title">Task scheduler</h1>
+            <div class="panel panel-default">
                  <div class="panel-body settings-block">
-                      <h1>Email</h1>
-                      <p>Send an email:-</p>
+                        <div class="col-sm-12">
+                            </div>
+                            {% if messages %}
+                            <div class="col-sm-12">
+                                {% for message in messages %}
+                                <p class="alert alert-{{ message.tags }}">{{ message }}</p>
+                                {% endfor %}
+                            </div>
+                            {% endif %}
                       <form method="post" id="send-email-task-form" action="{% url 'hc-send-email' %}" >
                              {% csrf_token %}
                              <div class="form-group">
-                                <label
-                                  for="formGroupRecipientEmail">Recipient Email
-                                </label>
-                                    <input
-                                    type="email"
-                                    class="form-control"
-                                    id="recipient-email"
-                                    name="recipient_email"
-                                    placeholder="someone@example.com" required>
                                 </div>
                                 <div class="form-group">
                                 <label
-                                for="formGroupEmailSubject">Email Subject
+                                for="formGroupEmailSubject">Task Subject
                                 </label>
                                  <input
                                   type="text"
@@ -49,12 +36,28 @@
                                 </div>
                                 <div class="form-group">
                                      <label
-                                     for="formGroupEmailBody">Email Body
+                                     for="formGroupEmailBody">Task Body
                                      </label>
                                      <textarea 
                                      id="email-body"
-                                     name="email_body">
-                                    </textarea>
+                                     name="email_body"
+                                     class="form-control"></textarea>
+                                    <label for="schedule">Time/Date</label>
+                                    <input type="text" class="form-control" placeholder="* * * * *" name="schedule">
+                                    <table font-style:"italic">
+                                        <br/>
+                                        <p style ="font-style: italic;"How to set date and time in the task scheduler. />
+                                        <br/>
+                                        A simple format to remember what the asterisks stand for is:
+                                        <br/>
+                                        mm hh dom moy dow.
+                                        <br/>
+                                        For the five asterisks, the first asteric implies the minute category of the time set. 
+                                        The second asterisk is the hour of the time set. the third asterisk the day of the month,
+                                        the fourth stands for the month of the year and the fifth atserisk is for the day of the week.
+                                    
+                                    </table>
+
                                 </div>
                                 <div class="form-group row">
                                     <div class="col-sm-12">
@@ -68,8 +71,17 @@
                             </div>
                         </form>
                     </div>
-                </div>
+             </div>
+    </div>
+    <div class="col-sm-6">
+        <h1>Scheduled Tasks</h1>
+        <div class="panel panel-default">
+            <div class="panel-body settings-block">
+                <!-- table -->
             </div>
+        </div>
+    </div>
+</div>
 <style>
 .panel-default > .panel-heading {
      background-color: #eee !important;
@@ -80,18 +92,5 @@
       <script src="{% static 'js/jquery-2.1.4.min.js' %}"></script>
       <script src="{% static 'js/bootstrap.min.js' %}"></script>
       <script src="http://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.9/summernote.js"></script>
-      <script>
-      $(document).ready(function(){
-          $('#email-body').summernote({
-              toolbar: [
-                  ['style', ['bold', 'italic', 'underline', 'clear']],
-                  ['font', ['strikethrough', 'superscript', 'subscript']],
-                  ['fontsize', ['fontsize']],
-                  ['color', ['color']],
-                  ['para', ['ul', 'ol', 'paragraph']],
-                  ['height', ['height']]
-                ]
-            });
-        });
-        </script>
+      
         {% endblock %}
