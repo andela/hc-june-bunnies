@@ -71,9 +71,10 @@ class Sms(Transport):
         auth_token  = "fbbf2f6e7b45a4a13b99bafa1db57d54"
 
         client = Client(account_sid, auth_token)
+        print(self.channel.value)
 
         message = client.messages.create(
-            to="+254703337420", 
+            to=self.channel.value, 
             from_="+12398429227",
             body="Hello from Health-Checks," + " " + check.name + " " + "has gone" + " " + check.status)
 
