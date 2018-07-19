@@ -16,7 +16,7 @@ Blogs - healthchecks.io
 	    <p>{{ blog.body|linebreaks }}</p>
 
     {% elif blog.status == 'draft' and blog.author == request.user %}
-	    <form  method="post">
+	    <form  method="post" action="{% url 'hc-publish-blog' id=blog.id %}">
 	    	{% csrf_token %}
 	    	<div class="row" id="title">
 		    	<label class="col-sm-2">Title:</label><br/>
@@ -38,9 +38,9 @@ Blogs - healthchecks.io
 		    <br/>
 
 	    	<div class="btn-group row text-center" id="buttons">
-		    	<input class="btn btn-info" type="submit" onclick="location.href="{% url 'hc-publish-blog' id=blog.id %}";" name="publish" value="Publish">
-		    	<input class="btn btn-info" type="submit" onclick="location.href="";" name="update" value="Update">
-		    	<input class="btn btn-danger" type="submit" onclick="location.href="";" name="delete" value="Delete">
+		    	<input class="btn btn-info" type="submit" onclick="location.href="#" name="publish" value="Publish">
+		    	<input class="btn btn-info" type="submit" onclick="location.href="#";" name="update" value="Update">
+		    	<input class="btn btn-danger" type="submit" onclick="location.href="#";" name="delete" value="Delete">
 	    	</div>
 	    </form>
 	{% else %}

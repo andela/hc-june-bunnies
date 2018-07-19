@@ -44,14 +44,14 @@ def create_blog(request):
 			categories = categories.split(',')
 			tags = tags.split(',')
 			for category in categories:
-				cat = Category.objects.filter(name=category)
+				cat = Category.objects.filter(name=category).first()
 				if not cat:
 					cat = Category(name=category)
 					cat.save()
 				blog.categories.add(cat.id)
 
 			for tag in tags:
-				tag_ = Tag.objects.filter(name=tag)
+				tag_ = Tag.objects.filter(name=tag).first()
 				if not tag_:
 					tag_ = Tag.objects.create(name=tag)
 
@@ -73,6 +73,7 @@ def drafts(request):
 			
 @login_required
 def publish_blog(request, id):
+	assert request.method == 'POST'
 	blog = Blog.objects.filter(id=id).first()
 	if not blog:
 		raise Http404
@@ -97,14 +98,14 @@ def update_blog(request, id):
 		categories = categories.split(',')
 		tags = tags.split(',')
 		for category in categories:
-			cat = Category.objects.filter(name=category)
+			cat = Category.objects.filter(name=category).first()
 			if not cat:
 				cat = Category(name=category)
 				cat.save()
 			blog.categories.add(cat.id)
 
 		for tag in tags:
-			tag_ = Tag.objects.filter(name=tag)
+			tag_ = Tag.objects.filter(name=tag).first()
 			if not tag_:
 				tag_ = Tag.objects.create(name=tag)
 
