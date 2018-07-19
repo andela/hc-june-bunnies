@@ -8,6 +8,11 @@ from hc.api.models import Check
 
 
 class EnsureTriggersTestCase(TestCase):
+    """Performs tests to ensure database triggers have been activated. This is by:
+
+    * Instantiating a last ping as now().
+    * Assert that alert_after has been changed.
+    """
 
     def test_ensure_triggers(self):
         Command().handle()
@@ -15,7 +20,7 @@ class EnsureTriggersTestCase(TestCase):
         check = Check.objects.create()
         assert check.alert_after is None
         self.assertIsNone(check.alert_after, msg=None)
-
+        #Instantiate the last ping
         check.last_ping = timezone.now()
         check.save()
         check.refresh_from_db()

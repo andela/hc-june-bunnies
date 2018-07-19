@@ -145,6 +145,29 @@ class Webhook(HttpTransport):
     def test(self):
         return self.get(self.channel.value)
 
+class Dasheroo(HttpTransport):
+    def notify(self, check):
+        url = self.channel.value_down_dasheroo
+        if check.status == "up":
+            url = self.channel.value_up_dasheroo
+
+        if not url:
+            # If the URL is empty then we do nothing
+            return "no-op"
+
+        payload = {
+            "unique_metric_name": {
+                "value": 1,
+                "type": "integer",
+                "strategy": "continuous",
+                "label": "Metric Display Name"
+                }
+        }
+
+        return self.post(self.channel.value_down_dasheroo, payload)
+
+    def test(self):
+        return self.post(self.channel.value_down_dasheroo, payload)
 
 class Slack(HttpTransport):
     def notify(self, check):

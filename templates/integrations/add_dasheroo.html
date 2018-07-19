@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+{% load compress humanize staticfiles hc_extras %}
+
+{% block title %}Add Dasheroo - healthchecks.io{% endblock %}
+
+
+{% block content %}
+<div class="row">
+<div class="col-sm-12">
+    <h1>Dasheroo</h1>
+
+    <p>Dasheroo provides a flexible API that you may use to create visualizations for 
+        custom data in your business dashboards. Your application needs to simply send
+         JSON-formatted data to a URL we provide and Dasheroo will handle the rest!</p>
+    <p>Dasheroo will recieve the following data-fields:</p>
+    <table class="table dasheroo-variables">
+        <tr>
+            <th class="variable-column">Variable</th>
+            <td>Expected data-type…</td>
+        </tr>
+        <tr>
+            <th><code>Date</code></th>
+            <td>String or date value in format 'YYYY-MM-DD' (Optional, default is current)</td>
+        </tr>
+        <tr>
+            <th><code>Value</code></th>
+            <td>Integer, percentage, currency, or percentage. (Required)</td>
+        </tr>
+        <tr>
+            <th><code>Strategy</code></th>
+            <td>
+                    continuous (default) - a rolling total (example: the size of a mailing list)<br>
+                    interval - resets to zero at the beginning of each day (example: new Facebook Fans)<br>
+                    Not required
+                </td>
+        </tr>
+    </table>
+
+    <h2>Integration Settings</h2>
+
+    <form method="post" class="form-horizontal">
+        {% csrf_token %}
+        <input type="hidden" name="kind" value="dasheroo" />
+        <div class="form-group {{ form.value_down.css_classes }}">
+            <label class="col-sm-2 control-label">URL for "down" events</label>
+            <div class="col-sm-10">
+                <input
+                    type="text"
+                    class="form-control"
+                    name="value_down"
+                    placeholder="http://..."
+                    value="{{ form.value_down.value|default:"" }}">
+                {% if form.value_down.errors %}
+                <div class="help-block">
+                    {{ form.value_down.errors|join:"" }}
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        <div style = "display:none" class="form-group {{ form.value_up.css_classes }}">
+            <label class="col-sm-2 control-label">URL for "up" events</label>
+            <div class="col-sm-10">
+                <input
+                    type="text"
+                    class="form-control"
+                    name="value_up"
+                    placeholder="http://..."
+                    value="{{ form.value_down.value|default:"" }}">
+                {% if form.value_up.errors %}
+                <div class="help-block">
+                    {{ form.value_up.errors|join:"" }}
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+                <button type="submit" class="btn btn-primary">Save Integration</button>
+            </div>
+        </div>
+    </form>
+</div>
+</div>
+
+
+{% endblock %}
+
+{% block scripts %}
+{% compress js %}
+<script src="{% static 'js/jquery-2.1.4.min.js' %}"></script>
+<script src="{% static 'js/bootstrap.min.js' %}"></script>
+{% endcompress %}
+{% endblock %}

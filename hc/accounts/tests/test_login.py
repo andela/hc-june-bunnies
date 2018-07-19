@@ -5,6 +5,11 @@ from hc.api.models import Check
 
 
 class LoginTestCase(TestCase):
+    """Performs tests to ensure the login process works. By:
+
+    * Checking that a login link is sent.
+    * Checking that bad links are caught.
+    """
 
     def test_it_sends_link(self):
         check = Check()
@@ -18,14 +23,14 @@ class LoginTestCase(TestCase):
 
         r = self.client.post("/accounts/login/", form)
         assert r.status_code == 302
-
-        ### Assert that a user was created
+        ### Assert that a user was created 
+        self.assertTrue(User.is_active)
 
         # And email sent
         self.assertEqual(len(mail.outbox), 1)
         self.assertEqual(mail.outbox[0].subject, 'Log in to healthchecks.io')
         ### Assert contents of the email body
-
+        self.assertIn('To log into healthchecks.io', mail.outbox[0].body)
         ### Assert that check is associated with the new user
 
     def test_it_pops_bad_link_from_session(self):

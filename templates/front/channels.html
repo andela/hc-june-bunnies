@@ -29,6 +29,7 @@
             <td>
             {% if ch.kind == "email" %} Email {% endif %}
             {% if ch.kind == "webhook" %} Webhook {% endif %}
+            {% if ch.kind == "dasheroo" %} Dasheroo {% endif %}
             {% if ch.kind == "slack" %} Slack {% endif %}
             {% if ch.kind == "hipchat" %} HipChat {% endif %}
             {% if ch.kind == "pd" %} PagerDuty {% endif %}
@@ -180,6 +181,15 @@
             <p>Group and private chat, file sharing, and integrations.</p>
 
             <a href="{% url 'hc-add-hipchat' %}" class="btn btn-primary">Add Integration</a>
+        </li>
+        <li>
+                <img src="{% static 'img/integrations/dasherooIcon.png' %}"
+                    class="icon" alt="Dasheroo icon" />
+    
+                <h2>Dasheroo</h2>
+                <p>Receive a HTTP callback when a check goes down.</p>
+    
+                <a href="{% url 'hc-add-dasheroo' %}" class="btn btn-primary">Add Integration</a>
         </li>
         <li>
             <img src="{% static 'img/integrations/victorops.png' %}"

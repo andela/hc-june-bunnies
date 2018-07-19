@@ -42,6 +42,14 @@ class AddWebhookForm(forms.Form):
     def get_value(self):
         return "{value_down}\n{value_up}".format(**self.cleaned_data)
 
+class AddDasherooForm(forms.Form):
+    error_css_class = "has-error"
+
+    value_down = forms.URLField(max_length=1000, required=False)
+    value_up = forms.URLField(max_length=1000, required=False)
+
+    def get_value(self):
+        return "{value_down}\n{value_up}".format(**self.cleaned_data)
 
 class NagUserForm(forms.Form):
     """Form for nagging the user"""

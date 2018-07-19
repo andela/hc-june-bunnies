@@ -49,6 +49,7 @@ class Command(BaseCommand):
         if check.nag() == "nag":
             interval = check.new_nag_after
             check.nag_after = now + interval
+            check.send_alert()
         check.save()
 
         tmpl = "\nSending alert, status=%s, code=%s\n"

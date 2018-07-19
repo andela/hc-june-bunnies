@@ -23,7 +23,7 @@ STATUSES = (
 DEFAULT_TIMEOUT = td(days=1)
 DEFAULT_GRACE = td(hours=1)
 CHANNEL_KINDS = (("email", "Email"), ("webhook", "Webhook"),
-                 ("hipchat", "HipChat"),
+                 ("hipchat", "HipChat"),("dasheroo", "Dasheroo"),
                  ("slack", "Slack"), ("pd", "PagerDuty"), ("po", "Pushover"),
                  ("victorops", "VictorOps"),
                  ("sms","Sms")
@@ -184,6 +184,8 @@ class Channel(models.Model):
             return transports.Sms(self)
         elif self.kind == "webhook":
             return transports.Webhook(self)
+        elif self.kind == "dasheroo":
+            return transports.Dasheroo(self)
         elif self.kind == "slack":
             return transports.Slack(self)
         elif self.kind == "hipchat":
@@ -233,6 +235,18 @@ class Channel(models.Model):
     @property
     def value_up(self):
         assert self.kind == "webhook"
+        parts = self.value.split("\n")
+        return parts[1] if len(parts) == 2 else ""
+    
+    @property
+    def value_down_dasheroo(self):
+        assert self.kind == "dasheroo"
+        parts = self.value.split("\n")
+        return parts[0]
+
+    @property
+    def value_up_dasheroo(self):
+        assert self.kind == "dasheroo"
         parts = self.value.split("\n")
         return parts[1] if len(parts) == 2 else ""
 
