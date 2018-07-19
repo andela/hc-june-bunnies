@@ -6,91 +6,144 @@
 
 {% block content %}
  <div class="row">
-    <div class="col-sm-6">
-            <h1 class="tasks-title">Task scheduler</h1>
-            <div class="panel panel-default">
-                 <div class="panel-body settings-block">
-                        <div class="col-sm-12">
-                            </div>
-                            {% if messages %}
-                            <div class="col-sm-12">
-                                {% for message in messages %}
-                                <p class="alert alert-{{ message.tags }}">{{ message }}</p>
-                                {% endfor %}
-                            </div>
-                            {% endif %}
-                      <form method="post" id="send-email-task-form" action="{% url 'hc-send-email' %}" >
-                             {% csrf_token %}
-                             <div class="form-group">
-                                </div>
-                                <div class="form-group">
-                                <label
-                                for="formGroupEmailSubject">Task Subject
-                                </label>
-                                 <input
-                                  type="text"
-                                  class="form-control"
-                                  id="email-subject"
-                                  name="email_subject"
-                                  placeholder="Email title" required>
-                                </div>
-                                <div class="form-group">
-                                     <label
-                                     for="formGroupEmailBody">Task Body
-                                     </label>
-                                     <textarea 
-                                     id="email-body"
-                                     name="email_body"
-                                     class="form-control"></textarea>
-                                    <label for="schedule">Time/Date</label>
-                                    <input type="text" class="form-control" placeholder="* * * * *" name="schedule">
-                                    <table font-style:"italic">
-                                        <br/>
-                                        <p style ="font-style: italic;"How to set date and time in the task scheduler. />
-                                        <br/>
-                                        A simple format to remember what the asterisks stand for is:
-                                        <br/>
-                                        mm hh dom moy dow.
-                                        <br/>
-                                        For the five asterisks, the first asteric implies the minute category of the time set. 
-                                        The second asterisk is the hour of the time set. the third asterisk the day of the month,
-                                        the fourth stands for the month of the year and the fifth atserisk is for the day of the week.
-                                    
-                                    </table>
-
-                                </div>
-                                <div class="form-group row">
-                                    <div class="col-sm-12">
-                                        <button
-                                        class="btn btn-default pull-right"
-                                        type="submit"
-                                        name="send-email">
-                                        Send
-                                    </button>
-                                </div>
-                            </div>
-                        </form>
-                    </div>
-             </div>
-    </div>
-    <div class="col-sm-6">
+    <div class="col-sm-12">
         <h1>Scheduled Tasks</h1>
         <div class="panel panel-default">
             <div class="panel-body settings-block">
                 <!-- table -->
+                <table id="checks-table"  class=" table table-stripped table-condensed">
+                    <tr>
+                        <th>Title</th>
+                        <th>Schedule</th>
+                        <th>Command</th>
+                    </tr>
+                    {% for task in tasks %}
+                        <tr>
+                            <td>{{task.subject}}</td>
+                            <td>{{task.schedule}}</td>
+                            <td>
+                                <span class="my-task-url">
+                                <i class="text-primary base">{{ task.generate_command }}</i>
+                                </span>
+                                <button
+                                    class="copy-link hidden-sm"
+                                    data-clipboard-text="{{ task.generate_command }}">
+                                    copy
+                                </button>  
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    
+                </table>
             </div>
+        </div>
+        <button class="btn btn-primary btn-lg" id="new-task-btn">Add New</button>
+    </div>
+</div>
+
+<div id="new-task-modal" class="modal" role="dialog">
+    <div class="modal-dialog">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h1 class="tasks-title">Task scheduler</h1>
+            </div>
+                <div class="panel-body settings-block">
+                    <div class="col-sm-12">
+                        </div>
+                        {% if messages %}
+                        <div class="col-sm-12">
+                            {% for message in messages %}
+                            <p class="alert alert-{{ message.tags }}">{{ message }}</p>
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+                    <form method="post" id="send-email-task-form" action="{% url 'hc-send-email' %}" >
+                            {% csrf_token %}
+                            <div class="form-group">
+                            </div>
+                            <div class="form-group">
+                            <label
+                            for="formGroupEmailSubject">Task Subject
+                            </label>
+                                <input
+                                type="text"
+                                class="form-control"
+                                id="email-subject"
+                                name="email_subject"
+                                placeholder="Email title" required>
+                            </div>
+                            <div class="form-group">
+                                    <label
+                                    for="formGroupEmailBody">Task Body
+                                    </label>
+                                    <textarea 
+                                    id="email-body"
+                                    name="email_body"
+                                    class="form-control"></textarea>
+                                    <br>
+                                <label for="schedule">Time/Date</label>
+                                <input type="text" class="form-control" value="* * * * *" name="schedule">
+                                <table font-style:"italic">
+                                    <br/>
+                                    <p style ="font-style: italic;"How to set date and time in the task scheduler. />
+                                    <br/>
+                                    A simple format to remember what the asterisks stand for is:
+                                    <br/>
+                                    mm hh dom moy dow.
+                                    <br/>
+                                    For the five asterisks, the first asteric implies the minute category of the time set. 
+                                    The second asterisk is the hour of the time set. the third asterisk the day of the month,
+                                    the fourth stands for the month of the year and the fifth atserisk is for the day of the week.
+                                
+                                </table>
+
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-sm-12">
+                                    
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                                <button
+                                    class="btn btn-primary pull-right"
+                                    type="submit"
+                                    name="send-email">
+                                    Save
+                                </button>
+                            </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
         </div>
     </div>
 </div>
-<style>
-.panel-default > .panel-heading {
-     background-color: #eee !important;
-     color: #fff;}
-      </style>
-      {% endblock %}
-      {% block scripts %}
-      <script src="{% static 'js/jquery-2.1.4.min.js' %}"></script>
-      <script src="{% static 'js/bootstrap.min.js' %}"></script>
-      <script src="http://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.9/summernote.js"></script>
-      
-        {% endblock %}
+
+{% endblock %}
+
+{% block scripts %}
+<script src="{% static 'js/jquery-2.1.4.min.js' %}"></script>
+<script src="{% static 'js/bootstrap.min.js' %}"></script>
+<script src="{% static 'js/clipboard.min.js' %}"></script>
+<script>
+    $("#new-task-btn").click(function() {
+    $('#new-task-modal').modal("show");
+    return false;
+});
+var clipboard = new Clipboard('button.copy-link');
+    $("button.copy-link").mouseout(function(e) {
+        setTimeout(function() {
+            e.target.textContent = "copy";
+        }, 300);
+    })
+
+    clipboard.on('success', function(e) {
+        e.trigger.textContent = "copied!";
+        e.clearSelection();
+    });
+
+    clipboard.on('error', function(e) {
+        var text = e.trigger.getAttribute("data-clipboard-text");
+        prompt("Press Ctrl+C to select:", text)
+    });
+</script>
+{% endblock %}

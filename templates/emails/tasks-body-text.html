@@ -1,0 +1,15 @@
+{% load humanize hc_extras %}
+{% block content %}
+
+Hello, {{recipient}}
+
+
+This is a scheduled task alert. Sent from <a href="https://healthchecks.io">healthchecks.io</a>.
+
+Task title: {{subject}}
+{{body | safe }}
+
+
+Regards, Healthchecks.io Team
+
+{% endblock %} 

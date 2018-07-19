@@ -1,12 +1,12 @@
 {% load humanize hc_extras %}
 {% block content %}
 
-<h1>Hello,</h1>
+<h1>Hello, {{recipient}}</h1>
 
 <p>
-   This is an email sent from <a href="https://healthchecks.io">healthchecks.io</a>.
+  This is a scheduled task alert. Sent from <a href="https://healthchecks.io">healthchecks.io</a>.
 </p>
-
+<h2>Task title: {{subject}}</h2>
 <p>{{body | safe }}</p>
 
 
