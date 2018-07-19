@@ -148,19 +148,27 @@ class Webhook(HttpTransport):
 class Dasheroo(HttpTransport):
     def notify(self, check):
         url = self.channel.value_down_dasheroo
+        myvalue = 0
+        mylabel = check.name
         if check.status == "up":
             url = self.channel.value_up_dasheroo
-
+            myvalue = 1
+        else:
+            myvalue = 0
+            url = self.channel.value_down_dasheroo
         if not url:
             # If the URL is empty then we do nothing
             return "no-op"
 
+        print(myvalue, "------", mylabel)
+        print("-----")
+        print("**--",self.channel.value_down_dasheroo,"--***")
         payload = {
             "unique_metric_name": {
-                "value": 1,
+                "value": myvalue,
                 "type": "integer",
                 "strategy": "continuous",
-                "label": "Metric Display Name"
+                "label": mylabel
                 }
         }
 
