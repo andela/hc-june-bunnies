@@ -1,4 +1,4 @@
-whiboto==2.48.0
+boto==2.48.0
 coverage==4.5.1
 coveralls==1.3.0
 cssselect==1.0.3
