@@ -50,3 +50,5 @@ class AddChannelTestCase(BaseTestCase):
 
     ### Test that the team access works
     ### Test that bad kinds don't work
+   
+
