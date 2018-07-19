@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% load compress staticfiles %}
+
+{% block title %}
+Blogs - healthchecks.io
+
+{% endblock %}
+
+
+{% block content %}
+
+	<h2><strong>Create a Blog</strong></h2>
+	<p>Fill in the form below to create a blog post.</p>
+	<div class="form-group">
+		<form method="post" action="{% url 'hc-post-blog' %}">
+			{% csrf_token %}
+		    {% for field in form %}
+			    <div class="fieldWrapper form-group row">
+			        {{ field.errors }}
+			        <label class="col-sm-2">
+			        	<span>{{ field.label_tag }} :</span>
+			        </label>
+			        <div class="col-sm-6">
+			        	{{ field }}
+			        	{% if field.help_text %}
+				        	<p class="help"><i>{{ field.help_text|safe }}</i></p>
+				        {% endif %}
+			        </div>        
+			    </div>
+			{% endfor %}
+
+			<input type="submit" class="btn btn-primary" value="Save Draft">
+		</form>
+	</div>
+
+	
+{% endblock %}

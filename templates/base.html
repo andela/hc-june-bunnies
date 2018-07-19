@@ -90,6 +90,10 @@
                 </li>
                 {% endif %}
 
+                <li {% if page == 'blog' %} class="active" {% endif %}>
+                    <a href="{% url 'hc-blog-list' %}">Blog</a>
+                </li>
+
                 <li {% if page == 'docs' %} class="active" {% endif %}>
                     <a href="{% url 'hc-docs' %}">Docs</a>
                 </li>

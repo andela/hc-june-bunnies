@@ -5,12 +5,22 @@
 
 
 {% block content %}
-
+	
 	<h2 class="page-header">Recents Posts</h2>
-    {% for blog in blogs %}
-       <h3><a href="{{ blog.get_absolute_url }}">{{ blog.title }}</a></h3>
-        <p class="small">Published {{ blog.publish_on }} by {{ blog.author }}</p>
-        <p>{{ blog.body|truncatewords:25|linebreaks }}</p>
-    {% endfor %}
-
+	<div class="row container-fluid">
+		<nav class="nav navbar navbar-right navbar-inverse">
+			<ul class="navbar-nav navbar nav">
+				<li><a class="btn-sm" href="{% url 'hc-post-blog' %}">POST BLOG</a></li>
+				<li><a class="btn-sm" href="{% url 'hc-blog-drafts' %}">MY DRAFTS</a></li>
+			</ul>
+		</nav>
+	</div>
+	<div class="row container-fluid">
+	    {% for blog in blogs %}
+	       <h3><a href="{{ blog.get_absolute_url }}">{{ blog.title }}</a></h3>
+	        <p class="small">Published {{ blog.publish_on }} by {{ blog.author.email }}</p>
+	        <p>{{ blog.body|truncatewords:25|linebreaks }}</p>
+	        <p>{{ blog.status }}</p>
+	    {% endfor %}
+    </div>
 {% endblock %}
