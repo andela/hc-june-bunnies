@@ -56,9 +56,8 @@ class AddChannelTestCase(BaseTestCase):
 
         self.client.login(username="alice@example.org", password="password")
         r = self.client.post(url, form)
-
-        self.assertRedirects(r, "/integrations/")
-
+        
+        self.assertEqual(r.status_code, 400)
         self.assertContains(r, "Unknown channel kind")
 
 
