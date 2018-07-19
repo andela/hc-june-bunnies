@@ -1,5 +1,5 @@
 from django.contrib import admin
-from hc.blog.models import Blog, Category
+from hc.blog.models import Blog, Category, Tag
 
 # Register your models here.
 @admin.register(Blog)
@@ -16,5 +16,10 @@ class BlogAdmin(admin.ModelAdmin):
 
 @admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
+	list_display = ("id", "name")
+	search_fields = ["id", "name"]
+
+@admin.register(Tag)
+class TagAdmin(admin.ModelAdmin):
 	list_display = ("id", "name")
 	search_fields = ["id", "name"]

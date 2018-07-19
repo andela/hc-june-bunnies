@@ -8,9 +8,45 @@ Blogs - healthchecks.io
 
 
 {% block content %}
+ {% if blog %}
+ 	{{ blog }}
+ 	{% if blog.status == 'published' %}
+		<h2><b>{{ blog.title }}</b></h2>
+	    <p class="small">Published on {{ blog.published_on }} by {{ blog.author.email }}</p>
+	    <p>{{ blog.body|linebreaks }}</p>
 
-	<h2>{{ blog.title }}</h2>
-    <p class="small">Published {{ blog.publish_on }} by {{ blog.author }}</p>
-    <p>{{ blog.body|linebreaks }}</p>
+    {% elif blog.status == 'draft' and blog.author == request.user %}
+	    <form  method="post">
+	    	{% csrf_token %}
+	    	<div class="row" id="title">
+		    	<label class="col-sm-2">Title:</label><br/>
+		    	<input class="col-sm-6" type="text" name="title" value="{{ blog.title }} "><br/>
+	    	</div>
+	    	<div class="row" id="body">
+		    	<label class="col-sm-2">Body:</label><br/>
+		    	<textarea class="col-sm-6 name="body" rows="12" cols="50">{{ blog.body }}</textarea><br/>
+	    	</div>
+	    	<div class="row" id="tags">
+				<label class="col-sm-2">Tags:</label><br/>
+		    	<input class="col-sm-6" type="text" name="tags" value="{% for tag in blog.tags.all %}{{ tag.name }}{% endfor %}"><br/>
 
+		    </div>
+		    <div class="row" id="categories">
+		    	<label class="col-sm-2">Categories:</label><br/>
+		    	<input class="col-sm-6" type="text" name="categories" value="{% for cat in blog.categories.all %}{{ cat.name }}{% endfor %}"><br/>
+		    </div>
+		    <br/>
+
+	    	<div class="btn-group row text-center" id="buttons">
+		    	<input class="btn btn-info" type="submit" onclick="location.href="{% url 'hc-publish-blog' id=blog.id %}";" name="publish" value="Publish">
+		    	<input class="btn btn-info" type="submit" onclick="location.href="";" name="update" value="Update">
+		    	<input class="btn btn-danger" type="submit" onclick="location.href="";" name="delete" value="Delete">
+	    	</div>
+	    </form>
+	{% else %}
+		<p>Sorry, we could not find the blog you were looking for.</p>
+	{% endif %}
+{% else %}
+	<p>No Blogs to display</p>
+{% endif %}
 {% endblock %}
