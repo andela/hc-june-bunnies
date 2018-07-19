@@ -3,6 +3,7 @@
 import hashlib
 import json
 import uuid
+import os
 from datetime import timedelta as td
 
 from django.conf import settings
@@ -272,3 +273,23 @@ class Notification(models.Model):
     channel = models.ForeignKey(Channel)
     created = models.DateTimeField(auto_now_add=True)
     error = models.CharField(max_length=200, blank=True)
+
+class Task (models.Model):
+    schedule = models.CharField(max_length=100, default="* * * * *")
+    time_created = models.DateTimeField(auto_now_add=True)
+    code = models.UUIDField(default=uuid.uuid4, editable=False, db_index=True)
+    task_scheduler=models.ForeignKey(User)
+    subject = models.CharField(max_length=1000, blank=True)
+    body = models.CharField(max_length=100, blank=True)
+
+
+    def run_task(self, code):
+        return code
+    
+    def generate_command(self):
+        path = os.environ.get("_")
+        venv =  os.environ.get("VIRTUAL_ENV") + "/bin/activate"
+        env =  os.environ.get("PWD") + "/.env"
+        source = " source "+ venv +" && source "+ env
+        command = self.schedule + source + " && "+ path +" runtask --code "+ self.run_task(str(self.code))
+        return  command

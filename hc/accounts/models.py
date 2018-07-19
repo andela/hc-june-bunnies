@@ -104,11 +104,5 @@ class Member(models.Model):
     user = models.ForeignKey(User)
     check_assigned = models.ManyToManyField(Check)
 
-class Task (models.Model):
-    schedule = models.CharField(max_length=100, default="* * * * *")
-    time_created = models.DateTimeField(auto_now_add=True)
-    task_scheduler=models.ForeignKey(User)
-    subject = models.CharField(max_length=1000, blank=True)
-    body = models.CharField(max_length=30, blank=True)
 
     
