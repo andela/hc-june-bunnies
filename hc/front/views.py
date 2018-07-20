@@ -388,6 +388,10 @@ def add_email(request):
     ctx = {"page": "channels"}
     return render(request, "integrations/add_email.html", ctx)
 
+# get sms details
+@login_required
+def add_sms(request):
+    return render(request, "integrations/add_sms.html")
 
 @login_required
 def add_webhook(request):
