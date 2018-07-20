@@ -6,8 +6,6 @@ from django.template.defaultfilters import slugify
 from django.http import Http404
 
 
-# Create your views here.
-
 
 def blogs_list(request):
 	'''displays a list of all published blogs'''
@@ -63,6 +61,7 @@ def create_blog(request):
 			
 			ctx = {'blog': blog}
 			return render(request, 'blog/blog_detail.html', ctx)
+	
 	form = BlogForm()
 	ctx = {'form': form}
 	return render(request, 'blog/post_blog.html', ctx)
@@ -113,6 +112,7 @@ def update_blog(request, id):
 
 			blog.tags.add(tag_.id)
 		blog.save()
+	
 	return redirect('hc-blog-list')
 
 @login_required
