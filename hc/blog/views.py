@@ -117,6 +117,7 @@ def update_blog(request, id):
 
 @login_required
 def delete_blog(request, id):
+	assert request.method == "POST"
 	blog = Blog.objects.filter(id=id).first()
 	if not blog:
 		raise Http404
@@ -129,7 +130,7 @@ def get_by_category(request, id):
 	cat_blogs = category.blog_set.all()
 	categories = Category.objects.all().order_by('name')
 	ctx = {
-		'title': category.name,
+		'page_title': category.name,
 		'blogs': cat_blogs,
 		'categories': categories
 	}
