@@ -289,4 +289,153 @@
         </table>
     </div>
 </div>
+<table id="checks-table" class="table hidden-xs">
+    <tr>
+        <th></th>
+        <th class="th-name">Name</th>
+        <th>Ping URL</th>
+        <th class="th-period">
+            Period <br />
+            <span class="checks-subline">Grace</span><br/>
+            Nag Interval
+        </th>
+        <th>Priority</th>
+        <th>Last Ping</th>
+        <th>Nag Status</th>
+        <th></th>
+    </tr>
+    {% for check in checks %}
+    <tr class="checks-row">
+        <td class="indicator-cell">
+            {% if check.get_status == "new" %}
+                <span class="status icon-up new"
+                    data-toggle="tooltip" title="New. Has never received a ping."></span>
+            {% elif check.get_status == "paused" %}
+                <span class="status icon-paused"
+                    data-toggle="tooltip" title="Monitoring paused. Ping to resume."></span>
+            {% elif check.in_grace_period %}
+                <span class="status icon-grace"></span>
+            {% elif check.get_status == "up" %}
+                <span class="status icon-up"></span>
+            {% elif check.get_status == "down" %}
+                <span class="status icon-down"></span>
+            {% endif %}
+        </td>
+        <td class="name-cell">
+            <div data-name="{{ check.name }}"
+                    data-tags="{{ check.tags }}"
+                    data-url="{% url 'hc-update-name' check.code %}"
+                    class="my-checks-name {% if not check.name %}unnamed{% endif %}">
+                <div>{{ check.name|default:"unnamed" }}</div>
+                {% for tag in check.tags_list %}
+                <span class="label label-tag">{{ tag }}</span>
+                {% endfor %}
+            </div>
+        </td>
+        <td class="url-cell">
+            <span class="my-checks-url">
+                <span class="base">{{ ping_endpoint }}</span>{{ check.code }}
+            </span>
+            <button
+                class="copy-link hidden-sm"
+                data-clipboard-text="{{ check.url }}">
+                copy
+            </button>
+        </td>
+        <td class="timeout-cell">
+            <span
+                data-url="{% url 'hc-update-timeout' check.code %}"
+                data-timeout="{{ check.timeout.total_seconds }}"
+                data-grace="{{ check.grace.total_seconds }}"
+                data-nag="{{ check.new_nag_after.total_seconds }}"
+                class="timeout-grace">
+                {{ check.timeout|hc_duration }}
+                <br />
+                <span class="checks-subline">
+                {{ check.grace|hc_duration }}
+                </span>
+                <br />
+                <span class="timeout-nag">
+                {{ check.new_nag_after|hc_duration }}
+                </span>
+            </span>
+        </td>
+        <td>
+            {% if check.priority == 0 %}
+                <button id="low">Low</button>
+            {% elif check.priority == 1 %}
+                <button id="normal">Normal</button>
+            {% else %}
+                <button id="high">High</button>
+            {% endif %}
+        <td>
+        {% if check.last_ping %}
+            <span
+                data-toggle="tooltip"
+                title="{{ check.last_ping|date:'N j, Y, P e' }}">
+                {{ check.last_ping|naturaltime }}
+            </span>
+        {% else %}
+            Never
+        {% endif %}
+        </td>
+        <td>
+            {% if check.nag_after > check.alert_after and check.nag_status == True %}
+                <button
+                    data-nag="{{ check.nag_status }}"
+                    data-url="{% url 'hc-update-nag' check.code %}"
+                    class="btn btn-danger update-nag">NAGGING!</button>
+            {% elif check.nag_status == True %}
+                <button
+                    data-nag="{{ check.nag_status }}"
+                    data-url="{% url 'hc-update-nag' check.code %}"
+                    class="btn btn-info update-nag">Nag On</button>
+            {% else %}
+                <button
+                    data-nag="{{ check.nag_status }}"
+                    data-url="{% url 'hc-update-nag' check.code %}"
+                    class="btn btn-default update-nag">Nag Off</button>
+            {% endif %}  
+        </td>
+        <td>
+            <div class="check-menu dropdown">
+                <button class="btn btn-sm btn-default dropdown-toggle" type="button" data-toggle="dropdown">
+                <span class="icon-settings" aria-hidden="true"></span>
+                </button>
+                <ul class="dropdown-menu">
+                    <li {% if check.status == "new" or check.status == "paused" %}class="disabled"{% endif %}>
+                        <a class="pause-check"
+                           href="#"
+                           data-url="{% url 'hc-pause' check.code %}">
+                           Pause Monitoring
+                        </a>
+                    </li>
+                    <li role="separator" class="divider"></li>
+                    <li>
+                        <a href="{% url 'hc-log' check.code %}">
+                            Log
+                        </a>
+                    </li>
+                    <li>
+                        <a
+                            href="#"
+                            class="usage-examples"
+                            data-url="{{ check.url }}"
+                            data-email="{{ check.email }}">
+                            Usage Examples
+                        </a>
+                    </li>
+                    <li role="separator" class="divider"></li>
+                    <li>
+                        <a href="#" class="check-menu-remove"
+                            data-name="{{ check.name_then_code }}"
+                            data-url="{% url 'hc-remove-check' check.code %}">
+                            Remove
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </td>
+    </tr>
+    {% endfor %}
 
