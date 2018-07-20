@@ -80,8 +80,7 @@ class Profile(models.Model):
     def invite(self, user, check=None):
         # if member exists, add the new check
         if Member.objects.filter(user=user):
-            for check in checks:
-                Member.objects.get(user=user).check_assigned.add(check.id)
+            Member.objects.get(user=user).check_assigned.add(check.id)
         else:
             member = Member(team=self, user=user)
             member.save()
@@ -102,3 +101,11 @@ class Member(models.Model):
     team = models.ForeignKey(Profile)
     user = models.ForeignKey(User)
     check_assigned = models.ManyToManyField(Check)
+    priority = models.CharField(max_length=10, default="normal")
+
+    @staticmethod
+    def is_alerted(check):
+        if check.prev_alert_status == check.status and check.alert_sent:
+            return True
+        return False
+
