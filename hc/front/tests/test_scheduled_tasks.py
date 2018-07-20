@@ -20,11 +20,11 @@ class ScheduledTaskTestCase(BaseTestCase):
             response = self.client.get("/tasks/")
             self.assertEqual(response.status_code, 200)
 
-    def test_it_creates_tasks(self):
-      url = "/tasks/"
+    def test_it_add_tasks(self):
+      url = "/tasks/sendemail/"
       form = {"email_subject": "email test", "email_body": "test", "schedule": "* * * * *"}
       tasks= Task.objects.all().count()
+
       self.client.login(username="alice@example.org", password="password")
-      response = self.client.post(url, form)
-      self.assertEqual(response.status_code, 200)
-      self.assertEqual(tasks, 1)
+      r = self.client.post(url, form)
+      self.assertRedirects(r, "/tasks/")
