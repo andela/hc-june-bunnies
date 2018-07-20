@@ -12,10 +12,9 @@ class Command(BaseCommand):
       task_code = options['code']
       try:
           task = Task.objects.get(code=task_code)
-          print(task)
       except Task.DoesNotExist:
           raise CommandError('Task "%s" does not exist' % task_code)
-      recipient = task.task_scheduler.email  
+      recipient = task.task_scheduler.email 
       ctx = {
             "subject":task.subject,
             "body":task.body,
@@ -23,5 +22,5 @@ class Command(BaseCommand):
             "code":task_code
       }
       emails.send_task(recipient, ctx)
-
       self.stdout.write(self.style.SUCCESS('Task Successfully run"%s"' % task_code))
+      return "Run 1 task"
