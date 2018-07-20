@@ -56,6 +56,17 @@ class SendAlertsTestCase(BaseTestCase):
             check.save()
         result = Command().handle_many()
         self.assertEqual(result, True, "handle_many should return True")
-
     
-        
+    @patch("hc.api.management.commands.sendalerts.Command.handle")
+    def test_handle_true(self, mock):
+        """Assert when Command's handle many that when handle should return True"""
+        time = timezone.now() - timedelta(days=1)
+        names = ["Name %d" % n for n in range(0, 1000)]
+
+        for name in names:
+            check = Check(user=self.bob, name=name)
+            check.alert_after = time
+            check.status = "up"
+            check.nag_status=True
+            check.save()
+        result = Command().handle()
