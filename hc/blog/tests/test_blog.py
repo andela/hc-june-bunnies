@@ -1,13 +1,13 @@
 import json
 from hc.test import BaseTestCase
-from hc.blog.models import Blog
+from hc.blog.models import Blog, Category
 from django.urls import reverse
 
 
 class BlogTestCase(BaseTestCase):
 	def create_blog(self):
 		url = "/blog/post/"
-		form_data = {'title': 'Sample Title', 'body': 'Sample Body', 'tags':'sample, blog', }
+		form_data = {'title': 'Sample Title', 'body': 'Sample Body', 'tags':'sample, blog', 'categories': 'Blog' }
 		self.client.login(username="alice@example.org", password="password")
 		response = self.client.post(url, form_data)
 
@@ -73,3 +73,18 @@ class BlogTestCase(BaseTestCase):
 		response = self.client.get(url)
 		# self.assertEqual(200, response.status_code)
 		self.assertContains(response, 'Sample Title', status_code=200)
+
+	def test_can_delete_unpublished_blog(self):
+		self.create_blog()
+		self.client.login(username="alice@example.org", password="password")
+		blog_id = Blog.objects.all().first().id
+		response = self.client.post('/blog/drafts/delete/{}/'.format(blog_id))
+		self.assertEqual(302, response.status_code)
+		assert Blog.objects.count() == 0
+
+	def test_can_get_blog_by_category(self):
+		self.create_blog()
+		cat = Category.objects.filter(name='Blog').first()
+		response = self.client.get(f'/blog/category/{cat.id}/')
+		self.assertEqual(200, response.status_code)
+		self.assertContains(response, 'Blog')
