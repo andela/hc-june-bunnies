@@ -20,7 +20,7 @@ class EnsureTriggersTestCase(TestCase):
         check = Check.objects.create()
         assert check.alert_after is None
         self.assertIsNone(check.alert_after, msg=None)
-        #Instantiate the last ping
+        # Instantiate the last ping
         check.last_ping = timezone.now()
         check.save()
         check.refresh_from_db()
@@ -33,5 +33,5 @@ class EnsureTriggersTestCase(TestCase):
         check.save()
         check.refresh_from_db()
         alert_after_refresh = check.alert_after
-        #Test that alert_after is lesser than the check's alert_after
+        # Test that alert_after is lesser than the check's alert_after
         assert alert_after_refresh > alert_after 

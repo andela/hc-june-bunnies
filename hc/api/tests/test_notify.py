@@ -48,6 +48,27 @@ class NotifyTestCase(BaseTestCase):
 
         self.assertFalse(mock_get.called)
         self.assertEqual(Notification.objects.count(), 0)
+    
+    @patch("hc.api.transports.requests.request")
+    def test_dasheroo_ignore_up_events(self, mock_get):
+        self._setup_data("dasheroo", "http://example", status="up")
+        self.channel.notify(self.check)
+
+        self.assertFalse(mock_get.called)
+        self.assertEqual(Notification.objects.count(), 0)
+    
+    @patch("hc.api.transports.requests.request")
+    def test_dasheroo(self, mock_get):
+        self._setup_data("dasheroo", "http://example")
+        mock_get.return_value.status_code = 200
+
+        self.channel.notify(self.check)
+        mock_get.assert_called_with(
+            "post", u"http://example",
+            headers={"User-Agent": "healthchecks.io"},
+            json={'unique_metric_name':
+                 {'value': 0, 'type': 'integer', 'strategy': 'continuous', 'label': ''}},
+                  timeout=5)
 
     @patch("hc.api.transports.requests.request")
     def test_webhooks_support_variables(self, mock_get):

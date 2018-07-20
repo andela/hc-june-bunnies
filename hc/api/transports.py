@@ -159,10 +159,7 @@ class Dasheroo(HttpTransport):
         if not url:
             # If the URL is empty then we do nothing
             return "no-op"
-
-        print(myvalue, "------", mylabel)
-        print("-----")
-        print("**--",self.channel.value_down_dasheroo,"--***")
+            
         payload = {
             "unique_metric_name": {
                 "value": myvalue,
