@@ -43,9 +43,12 @@ def my_checks(request):
         checks =list(q)
     down_checks =[]
     counter = Counter()
-    down_tags, grace_tags = set(), set()
+
+    down_tags, grace_tags, departments = set(), set(), set()
     for check in checks:
         status = check.get_status()
+        if check.department:
+            departments.add(check.department)
         for tag in check.tags_list():
             if tag == "":
                 continue
@@ -57,6 +60,13 @@ def my_checks(request):
                 down_tags.add(tag)
             elif check.in_grace_period():
                 grace_tags.add(tag)
+    dept_checks = {}
+    for department in departments:
+        temp_checks = []
+        for check in checks:
+            if check.department == department:
+                temp_checks.append(check)
+        dept_checks.update({department: temp_checks})
 
     ctx = {
         "page": "checks",
@@ -65,6 +75,7 @@ def my_checks(request):
         "tags": counter.most_common(),
         "down_tags": down_tags,
         "down_checks": down_checks,
+        "departments": dept_checks,
         "grace_tags": grace_tags,
         "ping_endpoint": settings.PING_ENDPOINT
     }
