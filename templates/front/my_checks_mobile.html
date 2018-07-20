@@ -1,112 +1,226 @@
 {% load hc_extras humanize %}
+<br>
+<ul class="nav nav-tabs visible-xs">
+        <li role="presentation" class="active">
+            <a href="#allchecks-mobile" aria-controls="allchecks-mobile" role="tab" data-toggle="tab">All Checks</a>
+        </li>
+        <li role="presentation">
+            <a href="#unresolved-mobile" aria-controls="unresolved-mobile" role="tab" data-toggle="tab">Unresolved Checks </a>
+        </li>
+    </ul>
+    <div class="tab-content visible-xs">
+        <div role="tabpanel" class="tab-pane active" id="allchecks-mobile">
+            <ul id="checks-list" class="visible-xs">
+                {% for check in checks %}
+                <li>
+                    <h2>
+                        <span class="{% if not check.name %}unnamed{% endif %}">
+                            {{ check.name|default:"unnamed" }}
+                        </span>
 
-<ul id="checks-list" class="visible-xs">
-    {% for check in checks %}
-    <li>
-        <h2>
-            <span class="{% if not check.name %}unnamed{% endif %}">
-                {{ check.name|default:"unnamed" }}
-            </span>
+                        <code>{{ check.code }}</code>
+                    </h2>
 
-            <code>{{ check.code }}</code>
-        </h2>
+                    <a
+                        href="#"
+                        class="btn remove-link check-menu-remove"
+                        data-name="{{ check.name_then_code }}"
+                        data-url="{% url 'hc-remove-check' check.code %}">
+                        <span class="icon-close"></span>
+                    </a>
 
-        <a
-            href="#"
-            class="btn remove-link check-menu-remove"
-            data-name="{{ check.name_then_code }}"
-            data-url="{% url 'hc-remove-check' check.code %}">
-            <span class="icon-close"></span>
-        </a>
-
-        <table class="table">
-            <tr>
-                <th>Status</th>
-                <td>
-                    {% if check.get_status == "new" %}
-                        <span class="label label-default">NEW</span>
-                    {% elif check.get_status == "paused" %}
-                        <span class="label label-default">PAUSED</span>
-                    {% elif check.in_grace_period %}
-                        <span class="label label-warning">LATE</span>
-                    {% elif check.get_status == "up" %}
-                        <span class="label label-success">UP</span>
-                    {% elif check.get_status == "down" %}
-                        <span class="label label-danger">DOWN</span>
-                    {% endif %}
-                </td>
-            </tr>
-            {% if check.tags %}
-            <tr>
-                <th>Tags</th>
-                <td>
-                    {% for tag in check.tags_list %}
-                    <span class="label label-tag">{{ tag }}</span>
-                    {% endfor %}
-                </td>
-            </tr>
-            {% endif %}
-            <tr>
-                <th>Period</th>
-                <td>{{ check.timeout|hc_duration }}</td>
-            </tr>
-            <tr>
-                <th>Grace Time</th>
-                <td>{{ check.grace|hc_duration }}</td>
-            </tr>
-            <tr>
-                <th>Last Ping</th>
-                <td>
-                    {% if check.last_ping %}
-                        {{ check.last_ping|naturaltime }}
-                    {% else %}
-                        Never
-                    {% endif %}
-                </td>
-            </tr>
-        </table>
+                    <table class="table">
+                        <tr>
+                            <th>Status</th>
+                            <td>
+                                {% if check.get_status == "new" %}
+                                    <span class="label label-default">NEW</span>
+                                {% elif check.get_status == "paused" %}
+                                    <span class="label label-default">PAUSED</span>
+                                {% elif check.in_grace_period %}
+                                    <span class="label label-warning">LATE</span>
+                                {% elif check.get_status == "up" %}
+                                    <span class="label label-success">UP</span>
+                                {% elif check.get_status == "down" %}
+                                    <span class="label label-danger">DOWN</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% if check.tags %}
+                        <tr>
+                            <th>Tags</th>
+                            <td>
+                                {% for tag in check.tags_list %}
+                                <span class="label label-tag">{{ tag }}</span>
+                                {% endfor %}
+                            </td>
+                        </tr>
+                        {% endif %}
+                        <tr>
+                            <th>Period</th>
+                            <td>{{ check.timeout|hc_duration }}</td>
+                        </tr>
+                        <tr>
+                            <th>Grace Time</th>
+                            <td>{{ check.grace|hc_duration }}</td>
+                        </tr>
+                        <tr>
+                            <th>Last Ping</th>
+                            <td>
+                                {% if check.last_ping %}
+                                    {{ check.last_ping|naturaltime }}
+                                {% else %}
+                                    Never
+                                {% endif %}
+                            </td>
+                        </tr>
+                    </table>
 
 
-        <div>
-            <a
-                href="#"
-                data-name="{{ check.name }}"
-                data-tags="{{ check.tags }}"
-                data-url="{% url 'hc-update-name' check.code %}"
-                class="btn btn-default my-checks-name">
-                Rename
-            </a>
+                    <div>
+                        <a
+                            href="#"
+                            data-name="{{ check.name }}"
+                            data-tags="{{ check.tags }}"
+                            data-url="{% url 'hc-update-name' check.code %}"
+                            class="btn btn-default my-checks-name">
+                            Rename
+                        </a>
 
-            <a
-                href="#"
-                data-url="{% url 'hc-update-timeout' check.code %}"
-                data-timeout="{{ check.timeout.total_seconds }}"
-                data-grace="{{ check.grace.total_seconds }}"
-                class="btn btn-default timeout-grace">Change Period</a>
+                        <a
+                            href="#"
+                            data-url="{% url 'hc-update-timeout' check.code %}"
+                            data-timeout="{{ check.timeout.total_seconds }}"
+                            data-grace="{{ check.grace.total_seconds }}"
+                            class="btn btn-default timeout-grace">Change Period</a>
 
-                {% if check.nag_after > check.alert_after and check.nag_status == True %}
-                <a
-                    href="#"
-                    data-nag="{{ check.nag_status }}"
-                    data-url="{% url 'hc-update-nag' check.code %}"
-                    class="btn btn-danger update-nag">NAGGING!</a>
-                {% elif check.nag_status == True %}
-                <a
-                    href="#"
-                    data-nag="{{ check.nag_status }}"
-                    data-url="{% url 'hc-update-nag' check.code %}"
-                    class="btn btn-info update-nag">Nag ON</a>
-                {% else %}
-                <a
-                    href="#"
-                    data-nag="{{ check.nag_status }}"
-                    data-url="{% url 'hc-update-nag' check.code %}"
-                    class="btn btn-default update-nag">Nag OFF</a>
-                {% endif %}
+                            {% if check.nag_after > check.alert_after and check.nag_status == True %}
+                            <a
+                                href="#"
+                                data-nag="{{ check.nag_status }}"
+                                data-url="{% url 'hc-update-nag' check.code %}"
+                                class="btn btn-danger update-nag">NAGGING!</a>
+                            {% elif check.nag_status == True %}
+                            <a
+                                href="#"
+                                data-nag="{{ check.nag_status }}"
+                                data-url="{% url 'hc-update-nag' check.code %}"
+                                class="btn btn-info update-nag">Nag ON</a>
+                            {% else %}
+                            <a
+                                href="#"
+                                data-nag="{{ check.nag_status }}"
+                                data-url="{% url 'hc-update-nag' check.code %}"
+                                class="btn btn-default update-nag">Nag OFF</a>
+                            {% endif %}
 
-            <a href="{% url 'hc-log' check.code %}" class="btn btn-default">Log</a>
+                        <a href="{% url 'hc-log' check.code %}" class="btn btn-default">Log</a>
+                    </div>
+
+                </li>
+                {% endfor %}
+            </ul>
         </div>
-
-    </li>
-    {% endfor %}
-</ul>
+        <div role="tabpanel" class="tab-pane" id="unresolved-mobile">
+            <ul id="checks-list" class="visible-xs">
+                    {% for check in down_checks %}
+                    <li>
+                        <h2>
+                            <span class="{% if not check.name %}unnamed{% endif %}">
+                                {{ check.name|default:"unnamed" }}
+                            </span>
+    
+                            <code>{{ check.code }}</code>
+                        </h2>
+    
+                        <a
+                            href="#"
+                            class="btn remove-link check-menu-remove"
+                            data-name="{{ check.name_then_code }}"
+                            data-url="{% url 'hc-remove-check' check.code %}">
+                            <span class="icon-close"></span>
+                        </a>
+    
+                        <table class="table">
+                            <tr>
+                                <th>Status</th>
+                                <td>
+                                    <span class="label label-danger">DOWN</span>
+                                </td>
+                            </tr>
+                            {% if check.tags %}
+                            <tr>
+                                <th>Tags</th>
+                                <td>
+                                    {% for tag in check.tags_list %}
+                                    <span class="label label-tag">{{ tag }}</span>
+                                    {% endfor %}
+                                </td>
+                            </tr>
+                            {% endif %}
+                            <tr>
+                                <th>Period</th>
+                                <td>{{ check.timeout|hc_duration }}</td>
+                            </tr>
+                            <tr>
+                                <th>Grace Time</th>
+                                <td>{{ check.grace|hc_duration }}</td>
+                            </tr>
+                            <tr>
+                                <th>Last Ping</th>
+                                <td>
+                                    {% if check.last_ping %}
+                                        {{ check.last_ping|naturaltime }}
+                                    {% else %}
+                                        Never
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        </table>
+    
+    
+                        <div>
+                            <a
+                                href="#"
+                                data-name="{{ check.name }}"
+                                data-tags="{{ check.tags }}"
+                                data-url="{% url 'hc-update-name' check.code %}"
+                                class="btn btn-default my-checks-name">
+                                Rename
+                            </a>
+    
+                            <a
+                                href="#"
+                                data-url="{% url 'hc-update-timeout' check.code %}"
+                                data-timeout="{{ check.timeout.total_seconds }}"
+                                data-grace="{{ check.grace.total_seconds }}"
+                                class="btn btn-default timeout-grace">Change Period</a>
+    
+                                {% if check.nag_after > check.alert_after and check.nag_status == True %}
+                                <a
+                                    href="#"
+                                    data-nag="{{ check.nag_status }}"
+                                    data-url="{% url 'hc-update-nag' check.code %}"
+                                    class="btn btn-danger update-nag">NAGGING!</a>
+                                {% elif check.nag_status == True %}
+                                <a
+                                    href="#"
+                                    data-nag="{{ check.nag_status }}"
+                                    data-url="{% url 'hc-update-nag' check.code %}"
+                                    class="btn btn-info update-nag">Nag ON</a>
+                                {% else %}
+                                <a
+                                    href="#"
+                                    data-nag="{{ check.nag_status }}"
+                                    data-url="{% url 'hc-update-nag' check.code %}"
+                                    class="btn btn-default update-nag">Nag OFF</a>
+                                {% endif %}
+    
+                            <a href="{% url 'hc-log' check.code %}" class="btn btn-default">Log</a>
+                        </div>
+    
+                    </li>
+                    {% endfor %}
+            </ul>
+        </div>
+    </div>

@@ -41,7 +41,7 @@ def my_checks(request):
     else:
         q = Check.objects.filter(user=request.team.user).order_by("created")
         checks =list(q)
-    
+    down_checks =[]
     counter = Counter()
     down_tags, grace_tags = set(), set()
     for check in checks:
@@ -53,6 +53,7 @@ def my_checks(request):
             counter[tag] += 1
 
             if status == "down":
+                down_checks.append(check)
                 down_tags.add(tag)
             elif check.in_grace_period():
                 grace_tags.add(tag)
@@ -63,6 +64,7 @@ def my_checks(request):
         "now": timezone.now(),
         "tags": counter.most_common(),
         "down_tags": down_tags,
+        "down_checks": down_checks,
         "grace_tags": grace_tags,
         "ping_endpoint": settings.PING_ENDPOINT
     }
