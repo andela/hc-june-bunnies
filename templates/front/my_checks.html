@@ -74,29 +74,8 @@
     </div>
 </div>
 
-<div id="checks-by-department" class="modal" role="dialog">
-    <div class="modal-dialog">
-    
-        <div class="modal-content">
-            <div class="modal-header">
-              <button type="button" class="close" data-dismiss="modal">&times;</button>
-              <h1 class="modal-title">Checks by Departments</h1>
-            </div>
-            <div class="modal-body">
 
-                {% for department in departments%}
-                    <span><h3>{{ department }}</h3></span>
-                    {% include "front/my_checks_mobile.html" with checks=departments|get_item:department %}
-                    {% include "front/my_checks_desktop.html" with checks=departments|get_item:department %}
-                {% endfor %}
 
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-            </div>
-        </div>
-    </div>     
-</div>
 
 <div id="update-name-modal" class="modal">
     <div class="modal-dialog">
