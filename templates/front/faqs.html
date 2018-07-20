@@ -1,4 +1,4 @@
-{% extends "front/base_docs.html" %}
+{% extends "front/base_faqs.html" %}
 {% load staticfiles %}
 
 {% block title %}Documentation - healthchecks.io{% endblock %}
@@ -11,7 +11,7 @@ We make sure to provide answers to any questions our users might have...but befo
 commonly asked questions to see if it might be among them.Feel free to hit us up though.
 </p>
 
-<a name="crontab"></a>
+<a name="signup/login"></a>
 <h3>Hey, how do I signup/login?</h3>
 
 <p>
@@ -22,7 +22,7 @@ login link through the email.
 
 
 
-<a name="python"></a>
+<a name="email/sms notification"></a>
 <h3>How do I set up the email/sms notifications?</h3>
 <p>
     After creating a check, click on the 'Integrations' link and choose the notifications channels you might want to 
@@ -32,7 +32,7 @@ login link through the email.
     are free and you won't be required to verify anything.
 </p>
 
-<a name="node"></a>
+<a name="nagging"></a>
 <h3>How does the nag feature work?</h3>
 <p>
     The nag is basically a feature that works by periodically sending an alert untill an issue is fixes.This is in
@@ -42,7 +42,7 @@ login link through the email.
 </p>
 
 
-<a name="php"></a>
+<a name="alerts"></a>
 <h3>How and when are alerts sent?</h3>
 <p>
     Each check has a configurable <strong>Period</strong> parameter, with the default value of one day.
