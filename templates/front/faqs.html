@@ -1,0 +1,111 @@
+{% extends "front/base_docs.html" %}
+{% load staticfiles %}
+
+{% block title %}Documentation - healthchecks.io{% endblock %}
+
+{% block docs_content %}
+
+<h2><b>Frequently Asked Questions</b></h2>
+<p>
+We make sure to provide answers to any questions our users might have...but before you ask your own, go through this 
+commonly asked questions to see if it might be among them.Feel free to hit us up though.
+</p>
+
+<a name="crontab"></a>
+<h3>Hey, how do I signup/login?</h3>
+
+<p>
+When starting to use healthchecks, probably the easiest way is to head over to our homepage, click on the right-up 
+login link.This link will take you to the signup page where we require you to submit your email.We will send you the
+login link through the email.
+</p>
+
+
+
+<a name="python"></a>
+<h3>How do I set up the email/sms notifications?</h3>
+<p>
+    After creating a check, click on the 'Integrations' link and choose the notifications channels you might want to 
+    integrate for when your checks go up or down.For the email channel, once you submit your email address you're supposed
+    to receive a verification email-this notification only works if it's verified.
+    As for the sms notification, just provide your phone number/s making sure to start with your country code.Email charges
+    are free and you won't be required to verify anything.
+</p>
+
+<a name="node"></a>
+<h3>How does the nag feature work?</h3>
+<p>
+    The nag is basically a feature that works by periodically sending an alert untill an issue is fixes.This is in
+    the case that should your check go down or get pinged too often.Then you're going to get a notification After
+    the set time untill that issue is fixed.But first, you must set up the channel from whick you're going to get
+    this alerts from.
+</p>
+
+
+<a name="php"></a>
+<h3>How and when are alerts sent?</h3>
+<p>
+    Each check has a configurable <strong>Period</strong> parameter, with the default value of one day.
+    For periodic tasks, this is the expected time gap between two runs.
+</p>
+<p>
+    Additionally, each check has a <strong>Grace</strong> parameter, with default value of one hour.
+    You can use this parameter to account for run time variance of tasks.
+    For example, if a backup task completes in 50 seconds one day, and
+    completes in 60 seconds the following day, you might not want to get
+    alerted because the backups are 10 seconds late.
+</p>
+<p>Each check can be in one of the following states:</p>
+
+<table class="table">
+    <tr>
+        <td>
+            <span class="status icon-up new"></span>
+        </td>
+        <td>
+            <strong>New.</strong>
+            A check that has been created, but has not received any pings yet.
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <span class="status icon-paused"></span>
+        </td>
+        <td>
+            <strong>Monitoring Paused.</strong>
+            You can resume monitoring of a paused check by pinging it.
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <span class="status icon-up"></span>
+        </td>
+        <td>
+            <strong>Up.</strong>
+            Time since last ping has not exceeded <strong>Period</strong>.
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <span class="status icon-grace"></span>
+        </td>
+        <td>
+            <strong>Late.</strong>
+            Time since last ping has exceeded <strong>Period</strong>,
+            but has not yet exceeded <strong>Period</strong> + <strong>Grace</strong>.
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <span class="status icon-down"></span>
+        </td>
+        <td>
+            <strong>Down.</strong>
+            Time since last ping has exceeded <strong>Period</strong> + <strong>Grace</strong>.
+            When check goes from "Late" to "Down", healthchecks.io
+            sends you an alert.
+        </td>
+    </tr>
+</table>
+
+{% endblock %}
