@@ -1,6 +1,7 @@
 import json
 from hc.test import BaseTestCase
 from hc.blog.models import Blog
+from django.urls import reverse
 
 
 class BlogTestCase(BaseTestCase):
@@ -56,3 +57,19 @@ class BlogTestCase(BaseTestCase):
 		response = self.client.get(url)
 		
 		self.assertContains(response, "Sample Title", status_code=200)
+
+	def test_create_blog_form_displays(self):
+		self.client.login(username="alice@example.org", password="password")
+		response = self.client.get('/blog/post/')
+		self.assertContains(response, "Enter tags separated by comma ',' ", status_code=200)
+
+	def test_can_get_one_blog(self):
+		self.create_blog()
+		blog = Blog.objects.all().first()
+		blog.status = 'published'
+		blog.save()
+		url = reverse('hc-blog-detail',
+        	args=[blog.published_on.year, blog.published_on.strftime('%m'), blog.published_on.strftime('%d'), blog.slug])
+		response = self.client.get(url)
+		# self.assertEqual(200, response.status_code)
+		self.assertContains(response, 'Sample Title', status_code=200)
